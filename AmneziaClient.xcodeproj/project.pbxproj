@@ -33,6 +33,7 @@
 		5238A23FCB0DAFD1E6A23C71 /* AmneziaCoreMac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D439E7AA879F1F7C3578F20 /* AmneziaCoreMac.framework */; };
 		576D70CC80F609D15E71DC64 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B156892A980CB1FE53F75532 /* Network.framework */; };
 		59DDAB384639772506CDCAC0 /* AmneziaUrlDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690A39F1D5151B4587475B2 /* AmneziaUrlDecoder.swift */; };
+		5EA19DC76B646E83033A5A3D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6D6015CCEE5BB3076130715 /* Assets.xcassets */; };
 		5F689DE316A6D4014B51ABD4 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F47ABB0F1912DA5B27E903 /* NetworkExtension.framework */; };
 		60C7077A3D24EC9F340C4F86 /* ServerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F87BF2C5753D8066BF2774 /* ServerProfile.swift */; };
 		62C6D728D69ADFB60F53D2C2 /* LiveTrafficStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08330B630C75604B931A2B0D /* LiveTrafficStatsView.swift */; };
@@ -81,6 +82,7 @@
 		EB173CC19870E0968CB2FDDE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8AEFD997C261AF28C6C290 /* DashboardView.swift */; };
 		F1D778A5AAE2884EEFA32699 /* AmneziaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580D8080B1F754511E54D95A /* AmneziaApp.swift */; };
 		F8BA4E190E57E7382C62C0A0 /* ServerShareQrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90E403C517C70B9D0EFB382 /* ServerShareQrView.swift */; };
+		FA7408B1D23335936D958C5B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3C22B371BB5E404E17FD7FB /* Assets.xcassets */; };
 		FD6BD2557EA88ACF0C1E1087 /* AmneziaCoreMac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7D439E7AA879F1F7C3578F20 /* AmneziaCoreMac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF49759D0812F82E78B61931 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13C68D263CE05AFA54C8FA7 /* ConnectionState.swift */; };
 /* End PBXBuildFile section */
@@ -208,6 +210,7 @@
 		89456F2EC51D8A783D6BAAAB /* QrCodeChunkAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeChunkAssembler.swift; sourceTree = "<group>"; };
 		8E6191D84A192DAE9717100D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		9473D7E26EACE64A0128D0FB /* AmneziaMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AmneziaMac.entitlements; sourceTree = "<group>"; };
+		A3C22B371BB5E404E17FD7FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A6AB9EBAB9084A8FFE2CC610 /* AmneziaCoreTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AmneziaCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD3C2EF15DDC6AB646C261A4 /* MacMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacMenuBarView.swift; sourceTree = "<group>"; };
 		ADAD3EE92A7DF0B93DFD047B /* ZlibHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZlibHelperTests.swift; sourceTree = "<group>"; };
@@ -222,6 +225,7 @@
 		D003F46FE4E8D36956ABB69E /* QrChunkAssemblerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrChunkAssemblerTests.swift; sourceTree = "<group>"; };
 		D1400B8D040D484C042DF531 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D46D9E42839FED9ACE46FE5C /* ProfileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStorage.swift; sourceTree = "<group>"; };
+		D6D6015CCEE5BB3076130715 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DDCA533F550747842C8274D7 /* StatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPill.swift; sourceTree = "<group>"; };
 		E0DB218DB1A4804B726D50E4 /* ProfileStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStorageTests.swift; sourceTree = "<group>"; };
 		E13C68D263CE05AFA54C8FA7 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
@@ -437,6 +441,7 @@
 			isa = PBXGroup;
 			children = (
 				226DEFEF4763CE7799B7871A /* AmneziaApp.entitlements */,
+				A3C22B371BB5E404E17FD7FB /* Assets.xcassets */,
 				0AD533D32078B1AF42FB1671 /* Info.plist */,
 				05950339D78370523EF882C6 /* App */,
 				43C22E803F19B26A0D61457F /* UIComponents */,
@@ -488,6 +493,7 @@
 			isa = PBXGroup;
 			children = (
 				9473D7E26EACE64A0128D0FB /* AmneziaMac.entitlements */,
+				D6D6015CCEE5BB3076130715 /* Assets.xcassets */,
 				578EEC863EA62B4BC4778E83 /* Info.plist */,
 				FDCBFA4B71ADB6098700AFA6 /* App */,
 				350C4DE12E700BC7EA982F70 /* UIComponents */,
@@ -618,6 +624,7 @@
 			buildConfigurationList = E2038EE2C7844F115259BBAB /* Build configuration list for PBXNativeTarget "AmneziaMac" */;
 			buildPhases = (
 				99243E7D48BA6111860FA0FA /* Sources */,
+				DC8B2BD3899C758968B5849D /* Resources */,
 				6B795DA794412243C692F014 /* Frameworks */,
 				FD710AF5E73E0FE021E724C1 /* Embed Frameworks */,
 			);
@@ -657,6 +664,7 @@
 			buildConfigurationList = 9055B07D943111DDB93A0710 /* Build configuration list for PBXNativeTarget "AmneziaApp" */;
 			buildPhases = (
 				31400A8586EA7965A42B4C41 /* Sources */,
+				6BB5761C061378F9414CC927 /* Resources */,
 				121F62FC0CAF4F84DF7E82BC /* Frameworks */,
 				E791D74E0D08BA33662A55EB /* Embed Foundation Extensions */,
 				4F2E5D31AC05BB0902961E7F /* Embed Frameworks */,
@@ -750,6 +758,25 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6BB5761C061378F9414CC927 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA7408B1D23335936D958C5B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DC8B2BD3899C758968B5849D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5EA19DC76B646E83033A5A3D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		31400A8586EA7965A42B4C41 /* Sources */ = {

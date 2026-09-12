@@ -152,6 +152,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client.mac
         PRODUCT_NAME: "Amnezia"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
         COMBINE_HIDPI_IMAGES: YES
         ENABLE_HARDENED_RUNTIME: YES
