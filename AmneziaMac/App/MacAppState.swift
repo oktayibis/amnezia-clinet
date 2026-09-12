@@ -84,7 +84,11 @@ public final class MacAppState: ObservableObject {
 
     public func loadProfiles() {
         profiles = storage.loadProfiles()
-        if let selected = storage.selectedProfile() {
+        if profiles.isEmpty {
+            selectedProfile = nil
+            return
+        }
+        if let selected = storage.selectedProfile(), profiles.contains(where: { $0.id == selected.id }) {
             selectedProfile = selected
         } else if let first = profiles.first {
             selectProfile(first)

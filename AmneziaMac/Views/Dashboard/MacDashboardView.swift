@@ -3,11 +3,13 @@ import AmneziaCore
 
 public struct MacDashboardView: View {
     @ObservedObject var appState: MacAppState
+    var onOpenServers: (() -> Void)? = nil
     @State private var isHoveringButton = false
     @State private var isConnectAnimating = false
 
-    public init(appState: MacAppState) {
+    public init(appState: MacAppState, onOpenServers: (() -> Void)? = nil) {
         self.appState = appState
+        self.onOpenServers = onOpenServers
     }
 
     public var body: some View {
@@ -335,8 +337,18 @@ public struct MacDashboardView: View {
                 }
 
                 Spacer()
+
+                if onOpenServers != nil {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.secondary)
+                }
             }
             .padding(18)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onOpenServers?()
+            }
         }
     }
 

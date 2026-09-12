@@ -152,7 +152,9 @@ public struct MacMainView: View {
     private var detailContent: some View {
         switch selectedTab {
         case .dashboard, .none:
-            MacDashboardView(appState: appState)
+            MacDashboardView(appState: appState) {
+                selectedTab = .servers
+            }
         case .servers:
             MacServerListView(appState: appState)
         case .settings:
