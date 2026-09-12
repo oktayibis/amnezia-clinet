@@ -5,8 +5,24 @@ public struct ServerListView: View {
     @ObservedObject var appState: AppState
     var isPresentedAsSheet: Bool = false
     @Environment(\.dismiss) private var dismiss
-    @State private var selectedDetailProfile: ServerProfile?
-    @State private var selectedShareProfile: ServerProfile?
+    private enum ActiveSheet: Identifiable {
+        case addServer
+        case detail(ServerProfile)
+        case share(ServerProfile)
+
+        var id: String {
+            switch self {
+            case .addServer:
+                return "addServer"
+            case .detail(let profile):
+                return "detail_\(profile.id)"
+            case .share(let profile):
+                return "share_\(profile.id)"
+            }
+        }
+    }
+
+    @State private var activeSheet: ActiveSheet?
 
     public init(appState: AppState, isPresentedAsSheet: Bool = false) {
         self.appState = appState
@@ -34,14 +50,14 @@ public struct ServerListView: View {
                                     }
 
                                     Button {
-                                        selectedShareProfile = profile
+                                        activeSheet = .share(profile)
                                     } label: {
                                         Label("Share", systemImage: "qrcode")
                                     }
                                     .tint(.purple)
 
                                     Button {
-                                        selectedDetailProfile = profile
+                                        activeSheet = .detail(profile)
                                     } label: {
                                         Label("Details", systemImage: "info.circle")
                                     }
@@ -66,7 +82,7 @@ public struct ServerListView: View {
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        appState.isAddServerPresented = true
+                        activeSheet = .addServer
                     }) {
                         Image(systemName: "plus")
                             .font(.system(size: 16, weight: .bold))
@@ -74,11 +90,20 @@ public struct ServerListView: View {
                     }
                 }
             }
-            .sheet(item: $selectedDetailProfile) { profile in
-                ServerDetailView(appState: appState, profile: profile)
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .addServer:
+                    AddServerSheet(appState: appState)
+                case .detail(let profile):
+                    ServerDetailView(appState: appState, profile: profile)
+                case .share(let profile):
+                    ServerShareQrView(profile: profile)
+                }
             }
-            .sheet(item: $selectedShareProfile) { profile in
-                ServerShareQrView(profile: profile)
+            .onChange(of: appState.profiles.count) { newCount in
+                if isPresentedAsSheet && newCount > 0 {
+                    dismiss()
+                }
             }
         }
     }
@@ -162,7 +187,7 @@ public struct ServerListView: View {
                 .padding(.horizontal, 32)
 
             Button(action: {
-                appState.isAddServerPresented = true
+                activeSheet = .addServer
             }) {
                 HStack(spacing: 8) {
                     Image(systemName: "plus.circle.fill")

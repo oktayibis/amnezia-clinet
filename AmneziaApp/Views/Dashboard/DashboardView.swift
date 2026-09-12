@@ -45,7 +45,11 @@ public struct DashboardView: View {
 
                         // Server Selector Card
                         ConnectionStatusCard(appState: appState) {
-                            showServerListSheet = true
+                            if appState.profiles.isEmpty {
+                                appState.isAddServerPresented = true
+                            } else {
+                                showServerListSheet = true
+                            }
                         }
 
                         // Real-time Traffic Stats

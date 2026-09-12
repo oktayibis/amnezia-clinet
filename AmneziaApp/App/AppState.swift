@@ -140,7 +140,7 @@ public final class AppState: ObservableObject {
                     HapticFeedback.notification(type: .warning)
                 } else {
                     guard let profile = selectedProfile else {
-                        errorMessage = "Please import or select a server first"
+                        HapticFeedback.notification(type: .warning)
                         isAddServerPresented = true
                         return
                     }
