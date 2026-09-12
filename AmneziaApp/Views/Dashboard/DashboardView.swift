@@ -92,6 +92,13 @@ public struct DashboardView: View {
                 get: { appState.errorMessage != nil },
                 set: { if !$0 { appState.errorMessage = nil } }
             )) {
+                if appState.errorMessage?.contains("Simulated Tunnel Engine") == true {
+                    Button("Enable Simulation") {
+                        appState.setSimulatedTunnel(true)
+                        appState.errorMessage = nil
+                        appState.toggleConnection()
+                    }
+                }
                 Button("OK", role: .cancel) {
                     appState.errorMessage = nil
                 }

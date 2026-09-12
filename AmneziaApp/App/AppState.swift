@@ -47,7 +47,9 @@ public final class AppState: ObservableObject {
         let defaultService: TunnelService = MockTunnelService.shared
         self.isSimulatedTunnel = true
         #else
-        let defaultService: TunnelService = NetworkExtensionTunnelService.shared
+        let savedSim = UserDefaults.standard.bool(forKey: "amnezia_simulated_tunnel")
+        self.isSimulatedTunnel = savedSim
+        let defaultService: TunnelService = savedSim ? MockTunnelService.shared : NetworkExtensionTunnelService.shared
         #endif
         
         self.tunnelService = tunnelService ?? defaultService
@@ -58,6 +60,7 @@ public final class AppState: ObservableObject {
 
     public func setSimulatedTunnel(_ simulated: Bool) {
         isSimulatedTunnel = simulated
+        UserDefaults.standard.set(simulated, forKey: "amnezia_simulated_tunnel")
         if simulated {
             tunnelService = MockTunnelService.shared
         } else {
@@ -122,7 +125,7 @@ public final class AppState: ObservableObject {
                 do {
                     try await tunnelService.startTunnel(with: profile)
                 } catch {
-                    errorMessage = error.localizedDescription
+                    handleTunnelError(error)
                 }
             }
         }
@@ -145,10 +148,19 @@ public final class AppState: ObservableObject {
                     HapticFeedback.notification(type: .success)
                 }
             } catch {
-                errorMessage = error.localizedDescription
-                HapticFeedback.notification(type: .error)
+                handleTunnelError(error)
             }
         }
+    }
+
+    private func handleTunnelError(_ error: Error) {
+        let desc = error.localizedDescription
+        if desc.localizedCaseInsensitiveContains("permission denied") {
+            errorMessage = "iOS denied VPN system permission.\n\nReal system-level VPN tunnels require a paid Apple Developer Program membership with the Network Extension entitlement. Personal (Free) teams cannot create system VPN profiles.\n\nEnable 'Simulated Tunnel Engine' to test all app features and animations on your device."
+        } else {
+            errorMessage = desc
+        }
+        HapticFeedback.notification(type: .error)
     }
 
     public func addProfile(_ profile: ServerProfile) {

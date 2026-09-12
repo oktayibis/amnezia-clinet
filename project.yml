@@ -8,9 +8,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    CODE_SIGNING_ALLOWED: "NO"
-    CODE_SIGNING_REQUIRED: "NO"
-    CODE_SIGN_IDENTITY: ""
+    DEVELOPMENT_TEAM: 3SN795A9D6
+    CODE_SIGN_STYLE: Automatic
 
 targets:
   AmneziaCore:
@@ -101,6 +100,9 @@ targets:
     platform: iOS
     sources:
       - path: Tests/AmneziaCoreTests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: AmneziaCore
 
