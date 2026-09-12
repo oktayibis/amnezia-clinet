@@ -100,9 +100,6 @@ public struct DashboardView: View {
                     Text(msg)
                 }
             }
-            .onAppear {
-                appState.checkClipboardForConfig()
-            }
         }
     }
 

@@ -20,6 +20,8 @@ targets:
       - path: AmneziaCore
     info:
       path: AmneziaCore/Info.plist
+      properties:
+        CFBundlePackageType: FMWK
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.core
@@ -39,6 +41,20 @@ targets:
       - path: AmneziaApp
     info:
       path: AmneziaApp/Info.plist
+      properties:
+        CFBundleDisplayName: "Amnezia"
+        NSCameraUsageDescription: "Amnezia requires camera access to scan VPN configuration QR codes."
+        NSPhotoLibraryUsageDescription: "Amnezia requires photo library access to import QR code images."
+        ITSAppUsesNonExemptEncryption: false
+        CFBundleURLTypes:
+          - CFBundleTypeRole: Viewer
+            CFBundleURLName: org.amnezia.client
+            CFBundleURLSchemes:
+              - vpn
+              - amnezia
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
     entitlements:
       path: AmneziaApp/AmneziaApp.entitlements
     settings:
@@ -62,6 +78,12 @@ targets:
       - path: AmneziaTunnel
     info:
       path: AmneziaTunnel/Info.plist
+      properties:
+        CFBundleDisplayName: "AmneziaTunnel"
+        CFBundlePackageType: "XPC!"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.networkextension.packet-tunnel
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PacketTunnelProvider
     entitlements:
       path: AmneziaTunnel/AmneziaTunnel.entitlements
     settings:
