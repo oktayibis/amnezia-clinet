@@ -3,6 +3,7 @@ options:
   bundleIdPrefix: org.amnezia
   deploymentTarget:
     iOS: "16.0"
+    macOS: "14.0"
   xcodeVersion: "15.0"
 
 settings:
@@ -106,6 +107,61 @@ targets:
     dependencies:
       - target: AmneziaCore
 
+  AmneziaCoreMac:
+    type: framework
+    platform: macOS
+    sources:
+      - path: AmneziaCore
+    info:
+      path: AmneziaCore/Info.plist
+      properties:
+        CFBundlePackageType: FMWK
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.core.mac
+        PRODUCT_NAME: AmneziaCore
+        DEFINES_MODULE: YES
+        SKIP_INSTALL: YES
+        GENERATE_INFOPLIST_FILE: NO
+        SWIFT_OPTIMIZATION_LEVEL: "-O"
+    dependencies:
+      - sdk: libz.tbd
+      - sdk: Network.framework
+      - sdk: NetworkExtension.framework
+
+  AmneziaMac:
+    type: application
+    platform: macOS
+    sources:
+      - path: AmneziaMac
+    info:
+      path: AmneziaMac/Info.plist
+      properties:
+        CFBundleDisplayName: "Amnezia"
+        CFBundleName: "Amnezia"
+        LSApplicationCategoryType: "public.app-category.utilities"
+        CFBundleURLTypes:
+          - CFBundleTypeRole: Viewer
+            CFBundleURLName: org.amnezia.client.mac
+            CFBundleURLSchemes:
+              - vpn
+              - amnezia
+    entitlements:
+      path: AmneziaMac/AmneziaMac.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client.mac
+        PRODUCT_NAME: "Amnezia"
+        GENERATE_INFOPLIST_FILE: NO
+        COMBINE_HIDPI_IMAGES: YES
+        ENABLE_HARDENED_RUNTIME: YES
+    dependencies:
+      - target: AmneziaCoreMac
+      - sdk: Network.framework
+      - sdk: NetworkExtension.framework
+      - sdk: AppKit.framework
+      - sdk: UniformTypeIdentifiers.framework
+
 schemes:
   AmneziaApp:
     build:
@@ -119,6 +175,20 @@ schemes:
       config: Debug
       targets:
         - AmneziaCoreTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
+
+  AmneziaMac:
+    build:
+      targets:
+        AmneziaMac: all
+        AmneziaCoreMac: all
+    run:
+      config: Debug
     profile:
       config: Release
     analyze:
