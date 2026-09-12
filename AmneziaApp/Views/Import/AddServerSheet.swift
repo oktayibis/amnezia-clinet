@@ -32,7 +32,7 @@ public struct AddServerSheet: View {
                 Color.black.ignoresSafeArea()
 
                 VStack(spacing: 18) {
-                    Text("Choose how you want to import your Amnezia or WireGuard configuration.")
+                    Text("Choose how you want to import your AWG Connect, AmneziaWG, or WireGuard configuration.")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -60,7 +60,20 @@ public struct AddServerSheet: View {
                             activeSheet = .photoPicker
                         }
 
-                        // 3. Paste URL or Config
+                        // 3. Import from Clipboard
+                        actionCard(
+                            icon: "doc.on.clipboard",
+                            iconColor: .yellow,
+                            title: "Import from Clipboard",
+                            subtitle: "Import configuration copied to your clipboard"
+                        ) {
+                            appState.importFromClipboard()
+                            if appState.errorMessage == nil {
+                                dismiss()
+                            }
+                        }
+
+                        // 4. Paste URL or Config
                         actionCard(
                             icon: "link",
                             iconColor: .green,
@@ -70,7 +83,7 @@ public struct AddServerSheet: View {
                             activeSheet = .manualInput
                         }
 
-                        // 4. Import from File
+                        // 5. Import from File
                         actionCard(
                             icon: "doc.badge.plus",
                             iconColor: .orange,

@@ -61,7 +61,7 @@ public struct MacMainView: View {
                 .transition(.opacity)
             }
         }
-        .alert("Amnezia", isPresented: Binding(
+        .alert("AWG Connect", isPresented: Binding(
             get: { appState.errorMessage != nil },
             set: { if !$0 { appState.errorMessage = nil } }
         )) {
@@ -84,7 +84,7 @@ public struct MacMainView: View {
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.green)
 
-                Text("AMNEZIA")
+                Text("AWG CONNECT")
                     .font(.system(size: 16, weight: .black, design: .rounded))
                     .tracking(2)
                     .foregroundColor(.white)

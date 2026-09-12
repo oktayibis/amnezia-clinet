@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "6017235F89C5552A27163583"
-               BuildableName = "Amnezia.app"
+               BuildableName = "AWG Connect.app"
                BlueprintName = "AmneziaApp"
                ReferencedContainer = "container:AmneziaClient.xcodeproj">
             </BuildableReference>
@@ -59,7 +59,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6017235F89C5552A27163583"
-            BuildableName = "Amnezia.app"
+            BuildableName = "AWG Connect.app"
             BlueprintName = "AmneziaApp"
             ReferencedContainer = "container:AmneziaClient.xcodeproj">
          </BuildableReference>
@@ -93,7 +93,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6017235F89C5552A27163583"
-            BuildableName = "Amnezia.app"
+            BuildableName = "AWG Connect.app"
             BlueprintName = "AmneziaApp"
             ReferencedContainer = "container:AmneziaClient.xcodeproj">
          </BuildableReference>
@@ -110,7 +110,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "6017235F89C5552A27163583"
-            BuildableName = "Amnezia.app"
+            BuildableName = "AWG Connect.app"
             BlueprintName = "AmneziaApp"
             ReferencedContainer = "container:AmneziaClient.xcodeproj">
          </BuildableReference>

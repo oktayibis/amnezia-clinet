@@ -63,8 +63,18 @@ public struct DashboardView: View {
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        appState.importFromClipboard()
+                    }) {
+                        Image(systemName: "doc.on.clipboard")
+                            .font(.system(size: 16))
+                            .foregroundColor(.white)
+                    }
+                }
+
                 ToolbarItem(placement: .principal) {
-                    Text("AMNEZIA")
+                    Text("AWG CONNECT")
                         .font(.system(size: 18, weight: .black, design: .rounded))
                         .tracking(2)
                         .foregroundStyle(
@@ -92,10 +102,11 @@ public struct DashboardView: View {
             .sheet(isPresented: $appState.isAddServerPresented) {
                 AddServerSheet(appState: appState)
             }
-            .alert("Amnezia", isPresented: Binding(
+            .alert("AWG Connect", isPresented: Binding(
                 get: { appState.errorMessage != nil },
                 set: { if !$0 { appState.errorMessage = nil } }
             )) {
+                #if DEBUG
                 if appState.errorMessage?.contains("Simulated Tunnel Engine") == true {
                     Button("Enable Simulation") {
                         appState.setSimulatedTunnel(true)
@@ -103,6 +114,7 @@ public struct DashboardView: View {
                         appState.toggleConnection()
                     }
                 }
+                #endif
                 Button("OK", role: .cancel) {
                     appState.errorMessage = nil
                 }
@@ -120,6 +132,7 @@ public struct DashboardView: View {
         HStack {
             StatusPill(state: appState.connectionState)
             Spacer()
+            #if DEBUG
             if appState.isSimulatedTunnel {
                 Text("SIMULATED")
                     .font(.system(size: 10, weight: .bold))
@@ -129,6 +142,7 @@ public struct DashboardView: View {
                     .foregroundColor(.yellow)
                     .clipShape(Capsule())
             }
+            #endif
         }
     }
 

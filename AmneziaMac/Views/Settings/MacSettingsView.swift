@@ -44,7 +44,7 @@ public struct MacSettingsView: View {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Connect on Launch")
                                         .font(.system(size: 14, weight: .medium))
-                                    Text("Automatically establish tunnel to active server when Amnezia launches")
+                                    Text("Automatically establish tunnel to active server when AWG Connect launches")
                                         .font(.system(size: 11))
                                         .foregroundColor(.secondary)
                                 }
@@ -83,6 +83,7 @@ public struct MacSettingsView: View {
                 }
 
                 // Diagnostics & Developer Mode
+                #if DEBUG
                 VStack(alignment: .leading, spacing: 14) {
                     Text("DEVELOPER / DIAGNOSTICS")
                         .font(.system(size: 11, weight: .bold))
@@ -105,6 +106,7 @@ public struct MacSettingsView: View {
                         .padding(14)
                     }
                 }
+                #endif
 
                 // About Section
                 VStack(alignment: .leading, spacing: 14) {
@@ -118,7 +120,9 @@ public struct MacSettingsView: View {
                                 Text("Version")
                                     .foregroundColor(.white)
                                 Spacer()
-                                Text("1.0.0 (Native macOS)")
+                                let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+                                let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+                                Text("\(version) (\(build))")
                                     .foregroundColor(.secondary)
                             }
 
@@ -135,10 +139,19 @@ public struct MacSettingsView: View {
                             Divider()
 
                             HStack {
+                                Text("Privacy Policy")
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Link("Online Policy", destination: URL(string: "https://github.com/oktayibis/amnezia-clinet/blob/main/PRIVACY.md")!)
+                            }
+
+                            Divider()
+
+                            HStack {
                                 Text("Open Source Project")
                                     .foregroundColor(.white)
                                 Spacer()
-                                Link("GitHub Repository", destination: URL(string: "https://github.com/amnezia-vpn/amnezia-client")!)
+                                Link("GitHub Repository", destination: URL(string: "https://github.com/oktayibis/amnezia-clinet")!)
                             }
                         }
                         .font(.system(size: 12))

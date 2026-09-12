@@ -42,14 +42,21 @@ public final class AppState: ObservableObject {
     private let storage = ProfileStorage.shared
     private var tunnelService: TunnelService
 
+    public var providesTrafficStats: Bool {
+        tunnelService.providesTrafficStats
+    }
+
     public init(tunnelService: TunnelService? = nil) {
         #if targetEnvironment(simulator)
         let defaultService: TunnelService = MockTunnelService.shared
         self.isSimulatedTunnel = true
-        #else
+        #elseif DEBUG
         let savedSim = UserDefaults.standard.bool(forKey: "amnezia_simulated_tunnel")
         self.isSimulatedTunnel = savedSim
         let defaultService: TunnelService = savedSim ? MockTunnelService.shared : NetworkExtensionTunnelService.shared
+        #else
+        self.isSimulatedTunnel = false
+        let defaultService: TunnelService = NetworkExtensionTunnelService.shared
         #endif
         
         self.tunnelService = tunnelService ?? defaultService
@@ -58,6 +65,7 @@ public final class AppState: ObservableObject {
         setupTunnelCallbacks()
     }
 
+    #if DEBUG
     public func setSimulatedTunnel(_ simulated: Bool) {
         isSimulatedTunnel = simulated
         UserDefaults.standard.set(simulated, forKey: "amnezia_simulated_tunnel")
@@ -72,6 +80,7 @@ public final class AppState: ObservableObject {
         }
         setupTunnelCallbacks()
     }
+    #endif
 
     private func setupTunnelCallbacks() {
         if let mock = tunnelService as? MockTunnelService {
@@ -120,6 +129,23 @@ public final class AppState: ObservableObject {
         }
     }
 
+    private func currentTunnelOptions() -> TunnelOptions {
+        let killSwitch = UserDefaults.standard.bool(forKey: "amnezia_kill_switch")
+        let dnsRaw = UserDefaults.standard.string(forKey: "amnezia_dns_provider") ?? DnsProvider.serverDefault.rawValue
+        let dnsProvider = DnsProvider(rawValue: dnsRaw) ?? .serverDefault
+        let dnsOverride: [String]?
+        if !dnsProvider.ips.isEmpty {
+            dnsOverride = dnsProvider.ips
+        } else if dnsProvider == .custom,
+                  let customIp = UserDefaults.standard.string(forKey: "amnezia_custom_dns"),
+                  !customIp.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            dnsOverride = [customIp.trimmingCharacters(in: .whitespacesAndNewlines)]
+        } else {
+            dnsOverride = nil
+        }
+        return TunnelOptions(killSwitch: killSwitch, dnsOverride: dnsOverride)
+    }
+
     public func selectProfile(_ profile: ServerProfile) {
         selectedProfile = profile
         storage.selectProfile(id: profile.id)
@@ -129,7 +155,8 @@ public final class AppState: ObservableObject {
         if connectionState.isConnected {
             Task {
                 do {
-                    try await tunnelService.startTunnel(with: profile)
+                    let options = currentTunnelOptions()
+                    try await tunnelService.startTunnel(with: profile, options: options)
                 } catch {
                     handleTunnelError(error)
                 }
@@ -150,7 +177,8 @@ public final class AppState: ObservableObject {
                         isAddServerPresented = true
                         return
                     }
-                    try await tunnelService.startTunnel(with: profile)
+                    let options = currentTunnelOptions()
+                    try await tunnelService.startTunnel(with: profile, options: options)
                     HapticFeedback.notification(type: .success)
                 }
             } catch {
@@ -162,7 +190,7 @@ public final class AppState: ObservableObject {
     private func handleTunnelError(_ error: Error) {
         let desc = error.localizedDescription
         if desc.localizedCaseInsensitiveContains("permission denied") {
-            errorMessage = "iOS denied VPN system permission.\n\nReal system-level VPN tunnels require a paid Apple Developer Program membership with the Network Extension entitlement. Personal (Free) teams cannot create system VPN profiles.\n\nEnable 'Simulated Tunnel Engine' to test all app features and animations on your device."
+            errorMessage = "VPN configuration permission was denied. Open Settings → General → VPN & Device Management to allow."
         } else {
             errorMessage = desc
         }
@@ -234,6 +262,25 @@ public final class AppState: ObservableObject {
                (string.contains("[Interface]") && string.contains("[Peer]")) {
                 detectedClipboardUrl = string
             }
+        }
+        #endif
+    }
+
+    public func importFromClipboard() {
+        #if canImport(UIKit)
+        if let string = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !string.isEmpty {
+            do {
+                _ = try importFromText(string)
+                detectedClipboardUrl = nil
+                HapticFeedback.notification(type: .success)
+            } catch {
+                errorMessage = error.localizedDescription
+                HapticFeedback.notification(type: .error)
+            }
+        } else {
+            errorMessage = "Clipboard is empty or does not contain valid configuration."
+            HapticFeedback.notification(type: .warning)
         }
         #endif
     }

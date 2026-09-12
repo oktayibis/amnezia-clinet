@@ -5,7 +5,7 @@ let package = Package(
     name: "AmneziaCore",
     platforms: [
         .iOS(.v16),
-        .macOS(.v13)
+        .macOS(.v14)
     ],
     products: [
         .library(

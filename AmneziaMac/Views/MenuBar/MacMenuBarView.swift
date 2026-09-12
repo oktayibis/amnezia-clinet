@@ -13,7 +13,7 @@ public struct MacMenuBarView: View {
 
     public var body: some View {
         VStack(spacing: 12) {
-            // Header: Status & Latency
+            // Header: Status
             HStack {
                 HStack(spacing: 6) {
                     Circle()
@@ -26,12 +26,6 @@ public struct MacMenuBarView: View {
                 }
 
                 Spacer()
-
-                if let ping = appState.pingLatencyMs, appState.selectedProfile != nil {
-                    Text("\(ping) ms")
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
-                        .foregroundColor(.secondary)
-                }
             }
 
             Divider()
@@ -80,8 +74,8 @@ public struct MacMenuBarView: View {
             .buttonStyle(.borderedProminent)
             .tint(appState.connectionState.isConnected ? .red : .green)
 
-            // Real-time Traffic Summary (if connected)
-            if appState.connectionState.isConnected {
+            // Real-time Traffic Summary (if connected and supported)
+            if appState.connectionState.isConnected && appState.providesTrafficStats {
                 HStack {
                     Label(appState.connectionStats.formattedDownSpeed, systemImage: "arrow.down")
                         .font(.system(size: 11, weight: .medium))
@@ -126,6 +120,15 @@ public struct MacMenuBarView: View {
                 .buttonStyle(.plain)
                 .font(.system(size: 11))
                 .foregroundColor(.accentColor)
+
+                Spacer()
+
+                Button("Import Clipboard") {
+                    appState.importFromClipboard()
+                }
+                .buttonStyle(.plain)
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
 
                 Spacer()
 

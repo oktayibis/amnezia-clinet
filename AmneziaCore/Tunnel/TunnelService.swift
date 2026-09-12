@@ -1,13 +1,30 @@
 import Foundation
 import Combine
 
+public struct TunnelOptions: Sendable {
+    public var killSwitch: Bool
+    public var dnsOverride: [String]?
+
+    public init(killSwitch: Bool = false, dnsOverride: [String]? = nil) {
+        self.killSwitch = killSwitch
+        self.dnsOverride = dnsOverride
+    }
+}
+
 public protocol TunnelService: AnyObject, Sendable {
     var currentState: ConnectionState { get }
     var currentStats: ConnectionStatistics { get }
+    var providesTrafficStats: Bool { get }
     
-    func startTunnel(with profile: ServerProfile) async throws
+    func startTunnel(with profile: ServerProfile, options: TunnelOptions) async throws
     func stopTunnel() async throws
     func reconnect() async throws
+}
+
+public extension TunnelService {
+    func startTunnel(with profile: ServerProfile) async throws {
+        try await startTunnel(with: profile, options: TunnelOptions())
+    }
 }
 
 /// Mock tunnel implementation for testing in Simulator and SwiftUI previews
@@ -33,7 +50,11 @@ public final class MockTunnelService: TunnelService, @unchecked Sendable {
         lock.withLock { _stats }
     }
 
-    public func startTunnel(with profile: ServerProfile) async throws {
+    public var providesTrafficStats: Bool {
+        true
+    }
+
+    public func startTunnel(with profile: ServerProfile, options: TunnelOptions) async throws {
         lock.withLock {
             self.currentProfile = profile
             self._state = .connecting

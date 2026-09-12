@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Amnezia</string>
+	<string>AWG Connect</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,11 +24,11 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>org.amnezia.client</string>
+			<string>com.oktayibis.awgconnect</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>vpn</string>
-				<string>amnezia</string>
+				<string>awgconnect</string>
 			</array>
 		</dict>
 	</array>
@@ -37,9 +37,9 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSCameraUsageDescription</key>
-	<string>Amnezia requires camera access to scan VPN configuration QR codes.</string>
+	<string>AWG Connect requires camera access to scan VPN configuration QR codes.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Amnezia requires photo library access to import QR code images.</string>
+	<string>AWG Connect requires photo library access to import QR code images.</string>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>

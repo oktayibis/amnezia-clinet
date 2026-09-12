@@ -1,27 +1,31 @@
-# Amnezia Native iOS Client
+# AWG Connect (iOS & macOS)
 
-A modern, high-performance, open-source native iOS client for **Amnezia VPN**, built exclusively using **Swift**, **SwiftUI**, and Apple's **NetworkExtension** framework.
+A modern, high-performance, open-source native iOS and macOS client for **AmneziaWG** and **WireGuard**, built exclusively using **Swift**, **SwiftUI**, and Apple's **NetworkExtension** framework.
 
-Unlike the official multi-platform desktop port, this client is designed from the ground up for iOS:
+> [!NOTE]
+> **Disclaimer**: AWG Connect is an independent, community-driven open-source client compatible with the AmneziaWG and WireGuard protocols. It is not affiliated with, endorsed by, or sponsored by Privacy Technologies or the official Amnezia VPN project.
+
+Unlike multi-platform desktop ports, this client is designed from the ground up for Apple platforms:
 - **Client-Focused**: Zero server provisioning or Docker installation bloat. Purely focused on lightning-fast, reliable VPN connectivity.
 - **Apple Native Design**: Modern SwiftUI interface with frosted glass styling (`.ultraThinMaterial`), spring animations, tactile haptic feedback, and an ambient dark mode.
 - **Full AmneziaWG (AWG) Obfuscation**: Deep support for Amnezia's custom WireGuard obfuscation headers and junk packet parameters (`Jc`, `Jmin`, `Jmax`, `S1`, `S2`, `S3`, `S4`, `H1`...`H4`, `I1`...`I5`).
 - **Flexible Import Engine**: Import connections via QR code (camera or photo library), `vpn://` URLs, WireGuard/AmneziaWG `.conf` text, or configuration files.
 - **Multi-Chunk QR Support**: Automatically assembles and decodes Amnezia's multi-part QR codes for large configurations (>850 bytes).
+- **Privacy-Centric**: Zero analytics, zero data collection, zero telemetry. All secrets stay strictly on your local device.
 
 ---
 
 ## 📱 Features
 
 ### 1. Zero-Friction Dashboard
-- **Interactive Power Button**: Large circular connect button with glowing ambient rings and state-adaptive animations (emerald green for connected, pulsing amber for connecting, dark graphite for idle).
+- **Interactive Power Button**: Large circular connect button with glowing ambient rings and state-adaptive animations.
 - **Live Performance Metrics**: Real-time download & upload speeds, session data counters, and connection duration timer.
-- **Server Health Card**: Displays active server, country flag, protocol badge, endpoint, and real-time ping latency (ms).
+- **Server Health Card**: Displays active server, country flag, protocol badge, and endpoint.
 
 ### 2. Smart Connection Importer
-- **Live Camera Scanner**: High-speed QR scanner with reticle viewfinder and torch control.
-- **Photos QR Scanner**: Detects and imports QR codes directly from screenshots and photos using Apple's Vision framework.
-- **Clipboard Detection**: Automatically detects `vpn://` links or `[Interface]` configs in clipboard upon app opening with a 1-tap import prompt.
+- **Live Camera Scanner**: High-speed QR scanner with reticle viewfinder and torch control (iOS).
+- **Photos QR Scanner**: Detects and imports QR codes directly from screenshots and photos using Apple's Vision framework (iOS).
+- **Manual / Clipboard Import**: Direct, user-authorized import from clipboard or text configuration.
 - **File Import**: Supports `.conf`, `.vpn`, and `.json` files via the iOS document picker.
 
 ### 3. Server Management & Sharing

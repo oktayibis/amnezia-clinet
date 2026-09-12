@@ -29,8 +29,22 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3696A0B100F369CD654E970A"
-               BuildableName = "Amnezia.app"
+               BuildableName = "AWG Connect.app"
                BlueprintName = "AmneziaMac"
+               ReferencedContainer = "container:AmneziaClient.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EA8BD3CD91C8E25A369AA442"
+               BuildableName = "AmneziaTunnelMac.appex"
+               BlueprintName = "AmneziaTunnelMac"
                ReferencedContainer = "container:AmneziaClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

@@ -12,33 +12,32 @@ public final class MacAppState: ObservableObject {
     @Published public var selectedProfile: ServerProfile? = nil
     @Published public var errorMessage: String? = nil
     @Published public var detectedClipboardUrl: String? = nil
-    @Published public var isSimulatedTunnel: Bool = true
-    @Published public var pingLatencyMs: Int? = nil
-    @Published public var isPinging: Bool = false
+    @Published public var isSimulatedTunnel: Bool = false
 
     private let storage = ProfileStorage.shared
     private var tunnelService: TunnelService
-    private var pingTimer: Timer?
-    private var clipboardTimer: Timer?
     private var lastCheckedClipboard: String = ""
 
+    public var providesTrafficStats: Bool {
+        tunnelService.providesTrafficStats
+    }
+
     public init(tunnelService: TunnelService? = nil) {
-        let savedSim = UserDefaults.standard.object(forKey: "amnezia_mac_simulated_tunnel") as? Bool ?? true
+        #if DEBUG
+        let savedSim = UserDefaults.standard.object(forKey: "amnezia_mac_simulated_tunnel") as? Bool ?? false
         self.isSimulatedTunnel = savedSim
         let defaultService: TunnelService = savedSim ? MockTunnelService.shared : NetworkExtensionTunnelService.shared
+        #else
+        self.isSimulatedTunnel = false
+        let defaultService: TunnelService = NetworkExtensionTunnelService.shared
+        #endif
         self.tunnelService = tunnelService ?? defaultService
 
         loadProfiles()
         setupTunnelCallbacks()
-        startClipboardMonitor()
-        startPingMonitor()
     }
 
-    deinit {
-        pingTimer?.invalidate()
-        clipboardTimer?.invalidate()
-    }
-
+    #if DEBUG
     public func setSimulatedTunnel(_ simulated: Bool) {
         isSimulatedTunnel = simulated
         UserDefaults.standard.set(simulated, forKey: "amnezia_mac_simulated_tunnel")
@@ -53,6 +52,7 @@ public final class MacAppState: ObservableObject {
         }
         setupTunnelCallbacks()
     }
+    #endif
 
     private func setupTunnelCallbacks() {
         if let mock = tunnelService as? MockTunnelService {
@@ -97,15 +97,32 @@ public final class MacAppState: ObservableObject {
         }
     }
 
+    private func currentTunnelOptions() -> TunnelOptions {
+        let killSwitch = UserDefaults.standard.bool(forKey: "amnezia_mac_kill_switch")
+        let dnsRaw = UserDefaults.standard.string(forKey: "amnezia_mac_dns_provider") ?? DnsProvider.serverDefault.rawValue
+        let dnsProvider = DnsProvider(rawValue: dnsRaw) ?? .serverDefault
+        let dnsOverride: [String]?
+        if !dnsProvider.ips.isEmpty {
+            dnsOverride = dnsProvider.ips
+        } else if dnsProvider == .custom,
+                  let customIp = UserDefaults.standard.string(forKey: "amnezia_mac_custom_dns"),
+                  !customIp.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            dnsOverride = [customIp.trimmingCharacters(in: .whitespacesAndNewlines)]
+        } else {
+            dnsOverride = nil
+        }
+        return TunnelOptions(killSwitch: killSwitch, dnsOverride: dnsOverride)
+    }
+
     public func selectProfile(_ profile: ServerProfile) {
         selectedProfile = profile
         storage.selectProfile(id: profile.id)
-        measurePing(for: profile)
 
         if connectionState.isConnected {
             Task {
                 do {
-                    try await tunnelService.startTunnel(with: profile)
+                    let options = currentTunnelOptions()
+                    try await tunnelService.startTunnel(with: profile, options: options)
                 } catch {
                     handleTunnelError(error)
                 }
@@ -123,7 +140,8 @@ public final class MacAppState: ObservableObject {
                         errorMessage = "Please import or select a server first"
                         return
                     }
-                    try await tunnelService.startTunnel(with: profile)
+                    let options = currentTunnelOptions()
+                    try await tunnelService.startTunnel(with: profile, options: options)
                 }
             } catch {
                 handleTunnelError(error)
@@ -134,7 +152,7 @@ public final class MacAppState: ObservableObject {
     private func handleTunnelError(_ error: Error) {
         let desc = error.localizedDescription
         if desc.localizedCaseInsensitiveContains("permission denied") {
-            errorMessage = "macOS denied VPN system permission.\n\nTo test the connection interface, live metrics, and graphs, you can enable 'Simulated Tunnel Engine' in Settings."
+            errorMessage = "VPN configuration permission was denied. Open System Settings → Network → VPN & Filters to allow the connection profile."
         } else {
             errorMessage = desc
         }
@@ -209,15 +227,7 @@ public final class MacAppState: ObservableObject {
         }
     }
 
-    // MARK: - Clipboard Monitor
-
-    private func startClipboardMonitor() {
-        clipboardTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
-            Task { @MainActor [weak self] in
-                self?.checkClipboard()
-            }
-        }
-    }
+    // MARK: - User-triggered Clipboard Handler
 
     public func checkClipboard() {
         guard let string = NSPasteboard.general.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -233,68 +243,22 @@ public final class MacAppState: ObservableObject {
         }
     }
 
+    public func importFromClipboard() {
+        guard let string = NSPasteboard.general.string(forType: .string)?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !string.isEmpty else {
+            errorMessage = "Clipboard is empty."
+            return
+        }
+
+        do {
+            _ = try importFromText(string)
+            self.detectedClipboardUrl = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
     public func dismissClipboardBanner() {
         detectedClipboardUrl = nil
-    }
-
-    // MARK: - Latency Measurement
-
-    private func startPingMonitor() {
-        pingTimer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { [weak self] _ in
-            Task { @MainActor [weak self] in
-                guard let self, let profile = self.selectedProfile else { return }
-                self.measurePing(for: profile)
-            }
-        }
-    }
-
-    public func measurePing(for profile: ServerProfile) {
-        let host = profile.endpointHost
-        guard !host.isEmpty else { return }
-
-        isPinging = true
-        let startTime = CFAbsoluteTimeGetCurrent()
-
-        let endpoint = NWEndpoint.hostPort(
-            host: NWEndpoint.Host(host),
-            port: NWEndpoint.Port(rawValue: UInt16(profile.endpointPort)) ?? 80
-        )
-
-        let connection = NWConnection(to: endpoint, using: .udp)
-        connection.stateUpdateHandler = { [weak self] state in
-            switch state {
-            case .ready:
-                let elapsedMs = Int((CFAbsoluteTimeGetCurrent() - startTime) * 1000)
-                DispatchQueue.main.async {
-                    self?.pingLatencyMs = max(12, elapsedMs)
-                    self?.isPinging = false
-                }
-                connection.cancel()
-            case .failed, .cancelled:
-                DispatchQueue.main.async {
-                    if self?.pingLatencyMs == nil {
-                        self?.pingLatencyMs = Int.random(in: 24...48) // Fallback realistic estimate
-                    }
-                    self?.isPinging = false
-                }
-            default:
-                break
-            }
-        }
-
-        connection.start(queue: .global())
-
-        // Timeout fallback after 2s
-        DispatchQueue.global().asyncAfter(deadline: .now() + 2.0) { [weak self] in
-            if connection.state != .ready && connection.state != .cancelled {
-                connection.cancel()
-                DispatchQueue.main.async {
-                    if self?.pingLatencyMs == nil {
-                        self?.pingLatencyMs = Int.random(in: 25...55)
-                    }
-                    self?.isPinging = false
-                }
-            }
-        }
     }
 }

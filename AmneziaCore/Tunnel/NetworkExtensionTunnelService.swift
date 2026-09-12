@@ -16,8 +16,9 @@ public final class NetworkExtensionTunnelService: TunnelService, @unchecked Send
     public var onStateChange: ((ConnectionState) -> Void)?
     public var onStatsChange: ((ConnectionStatistics) -> Void)?
 
-    public init(tunnelBundleId: String = "org.amnezia.client.tunnel") {
-        self.tunnelBundleId = tunnelBundleId
+    public init(tunnelBundleId: String? = nil) {
+        let defaultId = Bundle.main.bundleIdentifier.map { $0 + ".tunnel" } ?? "com.oktayibis.awgconnect.tunnel"
+        self.tunnelBundleId = tunnelBundleId ?? defaultId
         setupStatusObserver()
     }
 
@@ -29,7 +30,11 @@ public final class NetworkExtensionTunnelService: TunnelService, @unchecked Send
         lock.withLock { _stats }
     }
 
-    public func startTunnel(with profile: ServerProfile) async throws {
+    public var providesTrafficStats: Bool {
+        false
+    }
+
+    public func startTunnel(with profile: ServerProfile, options: TunnelOptions) async throws {
         let mgr = try await getOrCreateManager()
         
         let protocolConfiguration = NETunnelProviderProtocol()
@@ -38,15 +43,26 @@ public final class NetworkExtensionTunnelService: TunnelService, @unchecked Send
         
         // Pass the serialized wg/awg config to providerConfiguration
         let serializedConfig = WgQuickConfigParser.serialize(profile)
-        protocolConfiguration.providerConfiguration = [
+        var providerConfig: [String: Any] = [
             "config": serializedConfig,
             "profileId": profile.id.uuidString,
             "profileName": profile.name,
             "protocolType": profile.protocolType.rawValue
         ]
 
+        if options.killSwitch {
+            providerConfig["killSwitch"] = true
+            protocolConfiguration.includeAllNetworks = true
+        }
+
+        if let dns = options.dnsOverride, !dns.isEmpty {
+            providerConfig["dnsOverride"] = dns
+        }
+
+        protocolConfiguration.providerConfiguration = providerConfig
+
         mgr.protocolConfiguration = protocolConfiguration
-        mgr.localizedDescription = "Amnezia: \(profile.name)"
+        mgr.localizedDescription = "AWG Connect: \(profile.name)"
         mgr.isEnabled = true
 
         try await mgr.saveToPreferences()
@@ -62,6 +78,10 @@ public final class NetworkExtensionTunnelService: TunnelService, @unchecked Send
             self._state = .connecting
         }
         onStateChange?(.connecting)
+    }
+
+    public func startTunnel(with profile: ServerProfile) async throws {
+        try await startTunnel(with: profile, options: TunnelOptions())
     }
 
     public func stopTunnel() async throws {

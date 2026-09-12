@@ -142,6 +142,7 @@ public struct QrScannerView: View {
         }
     }
 
+    #if targetEnvironment(simulator) || DEBUG
     private func simulateSampleAwgScan() {
         let sample = """
         [Interface]
@@ -165,6 +166,7 @@ public struct QrScannerView: View {
         """
         handleScannedCode(sample)
     }
+    #endif
 }
 
 // MARK: - UIKit Camera View Wrapper

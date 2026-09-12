@@ -70,6 +70,7 @@ public struct SettingsView: View {
                     .listRowBackground(Color(white: 0.12))
 
                     // Developer / Simulator Mode
+                    #if DEBUG
                     Section(header: Text("DEVELOPER / DIAGNOSTICS").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary)) {
                         Toggle(isOn: Binding(
                             get: { appState.isSimulatedTunnel },
@@ -87,6 +88,7 @@ public struct SettingsView: View {
                         .tint(.yellow)
                     }
                     .listRowBackground(Color(white: 0.12))
+                    #endif
 
                     // About & Open Source
                     Section(header: Text("ABOUT").font(.system(size: 12, weight: .bold)).foregroundColor(.secondary)) {
@@ -94,7 +96,9 @@ public struct SettingsView: View {
                             Text("Version")
                                 .foregroundColor(.white)
                             Spacer()
-                            Text("1.0.0 (Native iOS)")
+                            let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+                            let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+                            Text("\(version) (\(build))")
                                 .foregroundColor(.secondary)
                         }
 
@@ -106,9 +110,20 @@ public struct SettingsView: View {
                                 .foregroundColor(.secondary)
                         }
 
-                        Link(destination: URL(string: "https://github.com/amnezia-vpn/amnezia-client")!) {
+                        Link(destination: URL(string: "https://github.com/oktayibis/amnezia-clinet/blob/main/PRIVACY.md")!) {
                             HStack {
-                                Text("Amnezia Open Source Project")
+                                Text("Privacy Policy")
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Image(systemName: "arrow.up.right")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+
+                        Link(destination: URL(string: "https://github.com/oktayibis/amnezia-clinet")!) {
+                            HStack {
+                                Text("Source Code (GitHub)")
                                     .foregroundColor(.white)
                                 Spacer()
                                 Image(systemName: "arrow.up.right")

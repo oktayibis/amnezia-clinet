@@ -184,7 +184,7 @@ public struct MacServerListView: View {
                 .animation(.spring(), value: isHoveringDropZone)
 
             VStack(spacing: 6) {
-                Text("Drag & Drop Amnezia Files Here")
+                Text("Drag & Drop Config Files Here")
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.white)
 
@@ -215,7 +215,7 @@ public struct MacServerListView: View {
     // MARK: - Sheets
     private var manualInputSheet: some View {
         VStack(alignment: .leading, spacing: 18) {
-            Text("Add Amnezia Server")
+            Text("Add Connection / Server")
                 .font(.system(size: 18, weight: .bold))
 
             Text("Paste a vpn:// link, amnezia:// URL, or raw WireGuard/AmneziaWG [Interface] configuration:")

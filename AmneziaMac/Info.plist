@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Amnezia</string>
+	<string>AWG Connect</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Amnezia</string>
+	<string>AWG Connect</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -24,11 +24,11 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>CFBundleURLName</key>
-			<string>org.amnezia.client.mac</string>
+			<string>com.oktayibis.awgconnect.mac</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>vpn</string>
-				<string>amnezia</string>
+				<string>awgconnect</string>
 			</array>
 		</dict>
 	</array>

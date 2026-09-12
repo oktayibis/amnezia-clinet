@@ -74,11 +74,13 @@ public struct ManualUrlInputView: View {
                             .cornerRadius(12)
                         }
 
+                        #if DEBUG
                         Button(action: insertSampleAwg) {
                             Text("Sample AWG")
                                 .font(.system(size: 13))
                                 .foregroundColor(.secondary)
                         }
+                        #endif
 
                         Spacer()
                     }
@@ -88,24 +90,24 @@ public struct ManualUrlInputView: View {
 
                     // Import Button
                     Button(action: importConfig) {
-                        Text("Import Connection")
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                        Text("Import Configuration")
+                            .font(.system(size: 16, weight: .bold))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
-                            .background(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? Color.gray : Color.green)
-                            .foregroundColor(.black)
+                            .background(inputText.isEmpty ? Color.gray.opacity(0.3) : Color.green)
+                            .foregroundColor(inputText.isEmpty ? .secondary : .black)
                             .cornerRadius(16)
                     }
-                    .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .disabled(inputText.isEmpty)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 24)
                 }
             }
-            .navigationTitle("Enter URL or Config")
+            .navigationTitle("Manual Import")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Cancel") {
+                    Button("Close") {
                         dismiss()
                     }
                     .foregroundColor(.white)
@@ -119,13 +121,6 @@ public struct ManualUrlInputView: View {
             } message: {
                 if let msg = errorMessage { Text(msg) }
             }
-            .onAppear {
-                #if canImport(UIKit)
-                if let clip = UIPasteboard.general.string, clip.hasPrefix("vpn://") {
-                    inputText = clip
-                }
-                #endif
-            }
         }
     }
 
@@ -138,6 +133,7 @@ public struct ManualUrlInputView: View {
         #endif
     }
 
+    #if DEBUG
     private func insertSampleAwg() {
         inputText = """
         [Interface]
@@ -162,6 +158,7 @@ public struct ManualUrlInputView: View {
         PersistentKeepalive = 25
         """
     }
+    #endif
 
     private func importConfig() {
         do {

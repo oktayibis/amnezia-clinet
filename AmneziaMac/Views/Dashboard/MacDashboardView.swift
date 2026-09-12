@@ -78,6 +78,7 @@ public struct MacDashboardView: View {
 
             Spacer()
 
+            #if DEBUG
             if appState.isSimulatedTunnel {
                 Text("SIMULATED TUNNEL")
                     .font(.system(size: 10, weight: .bold))
@@ -87,20 +88,7 @@ public struct MacDashboardView: View {
                     .foregroundColor(.yellow)
                     .clipShape(Capsule())
             }
-
-            if let ping = appState.pingLatencyMs, appState.selectedProfile != nil {
-                HStack(spacing: 5) {
-                    Image(systemName: "antenna.radiowaves.left.and.right")
-                        .font(.system(size: 11))
-                    Text("\(ping) ms")
-                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
-                }
-                .foregroundColor(pingColor(ping))
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(Color.white.opacity(0.06))
-                .clipShape(Capsule())
-            }
+            #endif
         }
     }
 
@@ -116,7 +104,7 @@ public struct MacDashboardView: View {
                     Text("VPN Configuration Detected in Clipboard")
                         .font(.system(size: 13, weight: .bold))
                         .foregroundColor(.white)
-                    Text("Found a valid amnezia config link. Click to import.")
+                    Text("Found a valid configuration link. Click to import.")
                         .font(.system(size: 11))
                         .foregroundColor(.secondary)
                 }
@@ -239,8 +227,10 @@ public struct MacDashboardView: View {
     }
 
     // MARK: - Traffic Stats Section
+    @ViewBuilder
     private var trafficStatsSection: some View {
-        HStack(spacing: 18) {
+        if appState.providesTrafficStats {
+            HStack(spacing: 18) {
             // Download Gauge
             MacGlassCard {
                 VStack(alignment: .leading, spacing: 10) {
@@ -288,6 +278,7 @@ public struct MacDashboardView: View {
                 }
                 .padding(18)
             }
+        }
         }
     }
 
@@ -383,7 +374,7 @@ public struct MacDashboardView: View {
 
     private var statusText: String {
         switch appState.connectionState {
-        case .connected: return "Protected & Encrypted"
+        case .connected: return "Connected"
         case .connecting: return "Negotiating Handshake..."
         case .disconnecting: return "Disconnecting..."
         case .reconnecting: return "Reconnecting..."
@@ -401,11 +392,5 @@ public struct MacDashboardView: View {
         case .disconnected: return "Connect"
         case .error: return "Retry"
         }
-    }
-
-    private func pingColor(_ ms: Int) -> Color {
-        if ms < 60 { return .green }
-        if ms < 120 { return .yellow }
-        return .orange
     }
 }

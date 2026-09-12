@@ -6,6 +6,8 @@ import AmneziaCore
 struct AmneziaMacApp: App {
     @StateObject private var appState = MacAppState()
     @Environment(\.openWindow) private var openWindow
+    @AppStorage("amnezia_mac_connect_on_launch") private var isConnectOnLaunch: Bool = false
+    @AppStorage("awg_privacy_notice_accepted") private var isPrivacyNoticeAccepted: Bool = false
 
     var body: some Scene {
         // Main Application Window
@@ -14,6 +16,19 @@ struct AmneziaMacApp: App {
                 .preferredColorScheme(.dark)
                 .onOpenURL { url in
                     handleIncomingUrl(url)
+                }
+                .onAppear {
+                    if isConnectOnLaunch && !appState.connectionState.isConnected {
+                        appState.toggleConnection()
+                    }
+                }
+                .sheet(isPresented: Binding(
+                    get: { !isPrivacyNoticeAccepted },
+                    set: { isPrivacyNoticeAccepted = !$0 }
+                )) {
+                    MacPrivacyNoticeView {
+                        isPrivacyNoticeAccepted = true
+                    }
                 }
         }
         .windowStyle(.titleBar)

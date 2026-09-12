@@ -1,6 +1,6 @@
 name: AmneziaClient
 options:
-  bundleIdPrefix: org.amnezia
+  bundleIdPrefix: com.oktayibis.awgconnect
   deploymentTarget:
     iOS: "16.0"
     macOS: "14.0"
@@ -11,6 +11,8 @@ settings:
     SWIFT_VERSION: "5.9"
     DEVELOPMENT_TEAM: 3SN795A9D6
     CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
 
 targets:
   AmneziaCore:
@@ -24,7 +26,7 @@ targets:
         CFBundlePackageType: FMWK
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.core
+        PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.core
         DEFINES_MODULE: YES
         SKIP_INSTALL: YES
         GENERATE_INFOPLIST_FILE: NO
@@ -42,16 +44,16 @@ targets:
     info:
       path: AmneziaApp/Info.plist
       properties:
-        CFBundleDisplayName: "Amnezia"
-        NSCameraUsageDescription: "Amnezia requires camera access to scan VPN configuration QR codes."
-        NSPhotoLibraryUsageDescription: "Amnezia requires photo library access to import QR code images."
+        CFBundleDisplayName: "AWG Connect"
+        NSCameraUsageDescription: "AWG Connect requires camera access to scan VPN configuration QR codes."
+        NSPhotoLibraryUsageDescription: "AWG Connect requires photo library access to import QR code images."
         ITSAppUsesNonExemptEncryption: false
         CFBundleURLTypes:
           - CFBundleTypeRole: Viewer
-            CFBundleURLName: org.amnezia.client
+            CFBundleURLName: com.oktayibis.awgconnect
             CFBundleURLSchemes:
               - vpn
-              - amnezia
+              - awgconnect
         UILaunchScreen: {}
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -59,8 +61,8 @@ targets:
       path: AmneziaApp/AmneziaApp.entitlements
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client
-        PRODUCT_NAME: "Amnezia"
+        PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect
+        PRODUCT_NAME: "AWG Connect"
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
@@ -79,7 +81,7 @@ targets:
     info:
       path: AmneziaTunnel/Info.plist
       properties:
-        CFBundleDisplayName: "AmneziaTunnel"
+        CFBundleDisplayName: "AWG Connect Tunnel"
         CFBundlePackageType: "XPC!"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.networkextension.packet-tunnel
@@ -88,7 +90,7 @@ targets:
       path: AmneziaTunnel/AmneziaTunnel.entitlements
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client.tunnel
+        PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.tunnel
         PRODUCT_NAME: "AmneziaTunnel"
         SKIP_INSTALL: YES
         GENERATE_INFOPLIST_FILE: NO
@@ -118,7 +120,7 @@ targets:
         CFBundlePackageType: FMWK
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.core.mac
+        PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.core.mac
         PRODUCT_NAME: AmneziaCore
         DEFINES_MODULE: YES
         SKIP_INSTALL: YES
@@ -137,31 +139,58 @@ targets:
     info:
       path: AmneziaMac/Info.plist
       properties:
-        CFBundleDisplayName: "Amnezia"
-        CFBundleName: "Amnezia"
+        CFBundleDisplayName: "AWG Connect"
+        CFBundleName: "AWG Connect"
         LSApplicationCategoryType: "public.app-category.utilities"
         CFBundleURLTypes:
           - CFBundleTypeRole: Viewer
-            CFBundleURLName: org.amnezia.client.mac
+            CFBundleURLName: com.oktayibis.awgconnect.mac
             CFBundleURLSchemes:
               - vpn
-              - amnezia
+              - awgconnect
     entitlements:
       path: AmneziaMac/AmneziaMac.entitlements
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client.mac
-        PRODUCT_NAME: "Amnezia"
+        PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.mac
+        PRODUCT_NAME: "AWG Connect"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: NO
         COMBINE_HIDPI_IMAGES: YES
         ENABLE_HARDENED_RUNTIME: YES
     dependencies:
       - target: AmneziaCoreMac
+      - target: AmneziaTunnelMac
       - sdk: Network.framework
       - sdk: NetworkExtension.framework
       - sdk: AppKit.framework
       - sdk: UniformTypeIdentifiers.framework
+
+  AmneziaTunnelMac:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: AmneziaTunnel
+    info:
+      path: AmneziaTunnel/Info.plist
+      properties:
+        CFBundleDisplayName: "AWG Connect Tunnel"
+        CFBundlePackageType: "XPC!"
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.networkextension.packet-tunnel
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PacketTunnelProvider
+    entitlements:
+      path: AmneziaTunnel/AmneziaTunnelMac.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.mac.tunnel
+        PRODUCT_NAME: "AmneziaTunnelMac"
+        SKIP_INSTALL: YES
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_HARDENED_RUNTIME: YES
+    dependencies:
+      - target: AmneziaCoreMac
+      - sdk: NetworkExtension.framework
 
 schemes:
   AmneziaApp:
@@ -188,6 +217,7 @@ schemes:
       targets:
         AmneziaMac: all
         AmneziaCoreMac: all
+        AmneziaTunnelMac: all
     run:
       config: Debug
     profile:

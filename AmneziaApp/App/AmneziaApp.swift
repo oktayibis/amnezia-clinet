@@ -5,6 +5,7 @@ import AmneziaCore
 public struct AmneziaApp: App {
     @StateObject private var appState = AppState.shared
     @AppStorage("amnezia_connect_on_launch") private var isConnectOnLaunch: Bool = false
+    @AppStorage("awg_privacy_notice_accepted") private var isPrivacyNoticeAccepted: Bool = false
 
     public init() {
         configureAppAppearance()
@@ -30,6 +31,12 @@ public struct AmneziaApp: App {
             }
             .tint(.green)
             .preferredColorScheme(.dark)
+            .sheet(isPresented: Binding(
+                get: { !isPrivacyNoticeAccepted },
+                set: { isPrivacyNoticeAccepted = !$0 }
+            )) {
+                PrivacyNoticeView()
+            }
             .onOpenURL { url in
                 handleIncomingUrl(url)
             }

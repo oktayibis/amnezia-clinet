@@ -32,8 +32,15 @@ open class PacketTunnelProvider: NEPacketTunnelProvider {
             settings.ipv4Settings = ipv4Settings
 
             // DNS Settings
-            if !profile.dnsServers.isEmpty {
-                let dnsSettings = NEDNSSettings(servers: profile.dnsServers)
+            let dnsServers: [String]
+            if let overrideServers = conf["dnsOverride"] as? [String], !overrideServers.isEmpty {
+                dnsServers = overrideServers
+            } else {
+                dnsServers = profile.dnsServers
+            }
+
+            if !dnsServers.isEmpty {
+                let dnsSettings = NEDNSSettings(servers: dnsServers)
                 dnsSettings.matchDomains = [""] // Route all DNS through tunnel
                 settings.dnsSettings = dnsSettings
             }
