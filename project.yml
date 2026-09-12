@@ -1,0 +1,83 @@
+name: AmneziaClient
+options:
+  bundleIdPrefix: org.amnezia
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    CODE_SIGNING_ALLOWED: "NO"
+    CODE_SIGNING_REQUIRED: "NO"
+    CODE_SIGN_IDENTITY: ""
+
+targets:
+  AmneziaCore:
+    type: framework
+    platform: iOS
+    sources:
+      - path: AmneziaCore
+    info:
+      path: AmneziaCore/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.core
+        DEFINES_MODULE: YES
+        SKIP_INSTALL: YES
+        GENERATE_INFOPLIST_FILE: NO
+        SWIFT_OPTIMIZATION_LEVEL: "-O"
+    dependencies:
+      - sdk: libz.tbd
+      - sdk: Network.framework
+      - sdk: NetworkExtension.framework
+
+  AmneziaApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: AmneziaApp
+    info:
+      path: AmneziaApp/Info.plist
+    entitlements:
+      path: AmneziaApp/AmneziaApp.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client
+        PRODUCT_NAME: "Amnezia"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies:
+      - target: AmneziaCore
+      - target: AmneziaTunnel
+      - sdk: AVFoundation.framework
+      - sdk: Vision.framework
+      - sdk: PhotosUI.framework
+
+  AmneziaTunnel:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: AmneziaTunnel
+    info:
+      path: AmneziaTunnel/Info.plist
+    entitlements:
+      path: AmneziaTunnel/AmneziaTunnel.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: org.amnezia.client.tunnel
+        PRODUCT_NAME: "AmneziaTunnel"
+        SKIP_INSTALL: YES
+        GENERATE_INFOPLIST_FILE: NO
+    dependencies:
+      - target: AmneziaCore
+      - sdk: NetworkExtension.framework
+
+  AmneziaCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/AmneziaCoreTests
+    dependencies:
+      - target: AmneziaCore

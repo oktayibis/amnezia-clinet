@@ -1,0 +1,207 @@
+import SwiftUI
+import Combine
+import AmneziaCore
+#if canImport(UIKit)
+import UIKit
+#endif
+
+@MainActor
+public final class AppState: ObservableObject {
+    public static let shared = AppState()
+
+    @Published public var profiles: [ServerProfile] = []
+    @Published public var selectedProfile: ServerProfile?
+    @Published public var connectionState: ConnectionState = .disconnected
+    @Published public var connectionStats: ConnectionStatistics = ConnectionStatistics()
+    
+    // UI Navigation & Sheets
+    @Published public var isAddServerPresented: Bool = false
+    @Published public var activeSheet: SheetType? = nil
+    @Published public var errorMessage: String? = nil
+    @Published public var detectedClipboardUrl: String? = nil
+    @Published public var isSimulatedTunnel: Bool = false
+
+    public enum SheetType: Identifiable {
+        case qrScanner
+        case photoPicker
+        case manualInput
+        case serverDetail(ServerProfile)
+        case shareQr(ServerProfile)
+
+        public var id: String {
+            switch self {
+            case .qrScanner: return "qrScanner"
+            case .photoPicker: return "photoPicker"
+            case .manualInput: return "manualInput"
+            case .serverDetail(let p): return "detail-\(p.id)"
+            case .shareQr(let p): return "share-\(p.id)"
+            }
+        }
+    }
+
+    private let storage = ProfileStorage.shared
+    private var tunnelService: TunnelService
+
+    public init(tunnelService: TunnelService? = nil) {
+        #if targetEnvironment(simulator)
+        let defaultService: TunnelService = MockTunnelService.shared
+        self.isSimulatedTunnel = true
+        #else
+        let defaultService: TunnelService = NetworkExtensionTunnelService.shared
+        #endif
+        
+        self.tunnelService = tunnelService ?? defaultService
+        
+        loadProfiles()
+        setupTunnelCallbacks()
+    }
+
+    public func setSimulatedTunnel(_ simulated: Bool) {
+        isSimulatedTunnel = simulated
+        if simulated {
+            tunnelService = MockTunnelService.shared
+        } else {
+            #if canImport(NetworkExtension)
+            tunnelService = NetworkExtensionTunnelService.shared
+            #else
+            tunnelService = MockTunnelService.shared
+            #endif
+        }
+        setupTunnelCallbacks()
+    }
+
+    private func setupTunnelCallbacks() {
+        if let mock = tunnelService as? MockTunnelService {
+            mock.onStateChange = { [weak self] state in
+                Task { @MainActor in
+                    self?.connectionState = state
+                }
+            }
+            mock.onStatsChange = { [weak self] stats in
+                Task { @MainActor in
+                    self?.connectionStats = stats
+                }
+            }
+        }
+        #if canImport(NetworkExtension)
+        if let ne = tunnelService as? NetworkExtensionTunnelService {
+            ne.onStateChange = { [weak self] state in
+                Task { @MainActor in
+                    self?.connectionState = state
+                }
+            }
+            ne.onStatsChange = { [weak self] stats in
+                Task { @MainActor in
+                    self?.connectionStats = stats
+                }
+            }
+        }
+        #endif
+        
+        connectionState = tunnelService.currentState
+        connectionStats = tunnelService.currentStats
+    }
+
+    public func loadProfiles() {
+        profiles = storage.loadProfiles()
+        if let selected = storage.selectedProfile() {
+            selectedProfile = selected
+        } else if let first = profiles.first {
+            selectProfile(first)
+        }
+    }
+
+    public func selectProfile(_ profile: ServerProfile) {
+        selectedProfile = profile
+        storage.selectProfile(id: profile.id)
+        HapticFeedback.selection()
+
+        // If connected, reconnect to the newly selected profile
+        if connectionState.isConnected {
+            Task {
+                do {
+                    try await tunnelService.startTunnel(with: profile)
+                } catch {
+                    errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    public func toggleConnection() {
+        HapticFeedback.impact(style: .heavy)
+        Task {
+            do {
+                if connectionState.isConnected || connectionState.isBusy {
+                    try await tunnelService.stopTunnel()
+                    HapticFeedback.notification(type: .warning)
+                } else {
+                    guard let profile = selectedProfile else {
+                        errorMessage = "Please import or select a server first"
+                        isAddServerPresented = true
+                        return
+                    }
+                    try await tunnelService.startTunnel(with: profile)
+                    HapticFeedback.notification(type: .success)
+                }
+            } catch {
+                errorMessage = error.localizedDescription
+                HapticFeedback.notification(type: .error)
+            }
+        }
+    }
+
+    public func addProfile(_ profile: ServerProfile) {
+        storage.addProfile(profile)
+        loadProfiles()
+        selectProfile(profile)
+        HapticFeedback.notification(type: .success)
+    }
+
+    public func updateProfile(_ profile: ServerProfile) {
+        storage.updateProfile(profile)
+        loadProfiles()
+    }
+
+    public func deleteProfile(_ profile: ServerProfile) {
+        if connectionState.isConnected && selectedProfile?.id == profile.id {
+            Task {
+                try? await tunnelService.stopTunnel()
+            }
+        }
+        storage.deleteProfile(id: profile.id)
+        loadProfiles()
+        HapticFeedback.notification(type: .warning)
+    }
+
+    public func importFromText(_ input: String) throws -> ServerProfile {
+        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        let profile: ServerProfile
+
+        if trimmed.lowercased().hasPrefix("vpn://") {
+            profile = try AmneziaUrlDecoder.decode(trimmed)
+        } else if trimmed.contains("[Interface]") && trimmed.contains("[Peer]") {
+            profile = try WgQuickConfigParser.parse(trimmed)
+        } else if trimmed.hasPrefix("{") {
+            profile = try AmneziaUrlDecoder.decode(trimmed)
+        } else {
+            // Try base64 URL decode
+            profile = try AmneziaUrlDecoder.decode("vpn://\(trimmed)")
+        }
+
+        addProfile(profile)
+        return profile
+    }
+
+    public func checkClipboardForConfig() {
+        #if canImport(UIKit)
+        if let string = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines),
+           !string.isEmpty {
+            if string.lowercased().hasPrefix("vpn://") ||
+               (string.contains("[Interface]") && string.contains("[Peer]")) {
+                detectedClipboardUrl = string
+            }
+        }
+        #endif
+    }
+}

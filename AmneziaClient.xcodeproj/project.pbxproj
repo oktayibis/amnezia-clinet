@@ -1,0 +1,948 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		021DABFAC5FED29D14606EFE /* TunnelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B83283CF0C4B33C9E06620B /* TunnelService.swift */; };
+		02EC90AEF9ADC432A4D78081 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F47ABB0F1912DA5B27E903 /* NetworkExtension.framework */; };
+		07ED5DE87F8BD0C6F44DEE28 /* ServerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883847ED651D0E0117E1EBF0 /* ServerListView.swift */; };
+		0A9E2EFF01AF8EC3FD366047 /* AmneziaCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02045E1AC133101530CDF8C1 /* AmneziaCore.framework */; };
+		17B8289A29A27E4198D34BFD /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CFEACDCA6511CD49B00C8D83 /* Vision.framework */; };
+		18B1D900444BBE8B71C8BF60 /* QrPhotoPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2E4CD7EA61B9CC6DC2353B /* QrPhotoPickerView.swift */; };
+		2885C501B8531427975F7CBC /* ConnectButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F61DEAD57931D8CDE885BF4 /* ConnectButton.swift */; };
+		2CCE2D1F5D156BC916E4CC42 /* ServerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6273263B1E4E1A2B797913D2 /* ServerDetailView.swift */; };
+		2D96DB96269DB4A377DC999E /* AddServerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3DC91D0C37358BEB600CFA /* AddServerSheet.swift */; };
+		2DD4E500A8134D726746787A /* ConnectionStatusCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65ED719C30739DCF5E5EE641 /* ConnectionStatusCard.swift */; };
+		399DE9E9458B31D4D1563E5E /* ManualUrlInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5E4B687FB54A12900BCDA12 /* ManualUrlInputView.swift */; };
+		3C73FEF217334ACD233BC237 /* ProfileStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0DB218DB1A4804B726D50E4 /* ProfileStorageTests.swift */; };
+		3D8FF3B382B49F18EC2CE406 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B156892A980CB1FE53F75532 /* Network.framework */; };
+		4EE66B5A1B545A37808C2155 /* StatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDCA533F550747842C8274D7 /* StatusPill.swift */; };
+		5F689DE316A6D4014B51ABD4 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F47ABB0F1912DA5B27E903 /* NetworkExtension.framework */; };
+		60C7077A3D24EC9F340C4F86 /* ServerProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F87BF2C5753D8066BF2774 /* ServerProfile.swift */; };
+		62C6D728D69ADFB60F53D2C2 /* LiveTrafficStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08330B630C75604B931A2B0D /* LiveTrafficStatsView.swift */; };
+		6309A097C24DA0A55974A31C /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7652E1123C130159191656 /* PacketTunnelProvider.swift */; };
+		6EA9051C6412FA4C236DDCA0 /* NetworkExtensionTunnelService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEC17D30CB6877D7CFCED4ED /* NetworkExtensionTunnelService.swift */; };
+		7CD9C49623CDB34ACE219B48 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1400B8D040D484C042DF531 /* AVFoundation.framework */; };
+		7E5F861DC8299F6746589E0A /* GlassCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83C107ECF957D7BD7341B3D /* GlassCard.swift */; };
+		80F9462D9F7A14F37B067640 /* DnsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E28A4D0F118A9A403CC122 /* DnsSettingsView.swift */; };
+		81DF14BFC165373440F7AB64 /* ProfileStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46D9E42839FED9ACE46FE5C /* ProfileStorage.swift */; };
+		822128856AF685C1C383B6A4 /* AmneziaUrlDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1690A39F1D5151B4587475B2 /* AmneziaUrlDecoder.swift */; };
+		856F4E53D571CAD2020E2F62 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 089DBCCB5FCEA6C145FBCA11 /* libz.tbd */; };
+		872CF6C5982A78A0653A38A6 /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 595EDAFD9D27F10EEE5A8114 /* PhotosUI.framework */; };
+		88232263A0FE4CD92D179789 /* AwgParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA6DE8A395E83A2227EA8455 /* AwgParameters.swift */; };
+		8C8D9C53B5BF2C860BF6B665 /* AmneziaCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 02045E1AC133101530CDF8C1 /* AmneziaCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		90935D225A6583C41FE530CF /* WgQuickConfigParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FE61C886F11C0DBCA840BA /* WgQuickConfigParserTests.swift */; };
+		A094EBD239A4FFAB4880B199 /* WgQuickConfigParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D3F3A80A1C75520F4352DD8 /* WgQuickConfigParser.swift */; };
+		A6D12B422050A2EB4739BCDD /* ZlibHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADAD3EE92A7DF0B93DFD047B /* ZlibHelperTests.swift */; };
+		B2A63FBDD42FEB1C7807F9DA /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6788D15972FD24CB01FBB79 /* HapticFeedback.swift */; };
+		C2EF8BBAAF9F8D024650BF9F /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05315DAAB29D3F5A666B6D67 /* AppState.swift */; };
+		CAFB900262CB136CDC3FADD8 /* QrCodeChunkAssembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89456F2EC51D8A783D6BAAAB /* QrCodeChunkAssembler.swift */; };
+		CB176FF223586C3749F04951 /* AmneziaTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 5CEB95366709BB8A2A7A9A51 /* AmneziaTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CF80C9FE2E50007AC9C116DF /* AmneziaCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 02045E1AC133101530CDF8C1 /* AmneziaCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D40D62F7976EEFDC2647A3C5 /* QrScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1B709DFC75FB5B7E95C53C /* QrScannerView.swift */; };
+		D5A92FF47CB8DA4CAA9DD108 /* AmneziaCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02045E1AC133101530CDF8C1 /* AmneziaCore.framework */; };
+		DAB8A755A321B68CD7E125E6 /* AmneziaCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02045E1AC133101530CDF8C1 /* AmneziaCore.framework */; };
+		DB4E8D2DD709F5F40AE69794 /* QrChunkAssemblerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D003F46FE4E8D36956ABB69E /* QrChunkAssemblerTests.swift */; };
+		E3576870E4579478411B3D9F /* AmneziaUrlDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F401AF6B2A4B70C6F6E1060 /* AmneziaUrlDecoderTests.swift */; };
+		E6A5EDC9723402466F6EC690 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D419556BB7AE10A90BC650C /* SettingsView.swift */; };
+		E93584FEC7E15BE0F8ED93B2 /* ZlibHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035AE0E70FF1A2FA1E2A344F /* ZlibHelper.swift */; };
+		EB173CC19870E0968CB2FDDE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8AEFD997C261AF28C6C290 /* DashboardView.swift */; };
+		F1D778A5AAE2884EEFA32699 /* AmneziaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580D8080B1F754511E54D95A /* AmneziaApp.swift */; };
+		F8BA4E190E57E7382C62C0A0 /* ServerShareQrView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C90E403C517C70B9D0EFB382 /* ServerShareQrView.swift */; };
+		FF49759D0812F82E78B61931 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13C68D263CE05AFA54C8FA7 /* ConnectionState.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		07071BEB94F6033FE868AA34 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E325CC2FB4C2582FA9687A85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C985819825B223392667264E;
+			remoteInfo = AmneziaCore;
+		};
+		720E24505C848BC682931683 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E325CC2FB4C2582FA9687A85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5239A19AD363A497FFC1BDBB;
+			remoteInfo = AmneziaTunnel;
+		};
+		B7C83F8969544FC931760BCF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E325CC2FB4C2582FA9687A85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C985819825B223392667264E;
+			remoteInfo = AmneziaCore;
+		};
+		E895C3334FB739663C6B3E44 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E325CC2FB4C2582FA9687A85 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C985819825B223392667264E;
+			remoteInfo = AmneziaCore;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		15B2BE5E21757242E80BE8B7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CF80C9FE2E50007AC9C116DF /* AmneziaCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4F2E5D31AC05BB0902961E7F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8C8D9C53B5BF2C860BF6B665 /* AmneziaCore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E791D74E0D08BA33662A55EB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CB176FF223586C3749F04951 /* AmneziaTunnel.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		00F47ABB0F1912DA5B27E903 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		02045E1AC133101530CDF8C1 /* AmneziaCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AmneziaCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		022C8AD014BF68477209F17F /* AmneziaApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AmneziaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		035AE0E70FF1A2FA1E2A344F /* ZlibHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZlibHelper.swift; sourceTree = "<group>"; };
+		05315DAAB29D3F5A666B6D67 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		08330B630C75604B931A2B0D /* LiveTrafficStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveTrafficStatsView.swift; sourceTree = "<group>"; };
+		089DBCCB5FCEA6C145FBCA11 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		0AD533D32078B1AF42FB1671 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0F401AF6B2A4B70C6F6E1060 /* AmneziaUrlDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmneziaUrlDecoderTests.swift; sourceTree = "<group>"; };
+		148250FE2BBE0E398E5BEF14 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1690A39F1D5151B4587475B2 /* AmneziaUrlDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmneziaUrlDecoder.swift; sourceTree = "<group>"; };
+		1A3DC91D0C37358BEB600CFA /* AddServerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerSheet.swift; sourceTree = "<group>"; };
+		1F61DEAD57931D8CDE885BF4 /* ConnectButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectButton.swift; sourceTree = "<group>"; };
+		226DEFEF4763CE7799B7871A /* AmneziaApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AmneziaApp.entitlements; sourceTree = "<group>"; };
+		2D3F3A80A1C75520F4352DD8 /* WgQuickConfigParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WgQuickConfigParser.swift; sourceTree = "<group>"; };
+		39FE61C886F11C0DBCA840BA /* WgQuickConfigParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WgQuickConfigParserTests.swift; sourceTree = "<group>"; };
+		51F87BF2C5753D8066BF2774 /* ServerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerProfile.swift; sourceTree = "<group>"; };
+		580D8080B1F754511E54D95A /* AmneziaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmneziaApp.swift; sourceTree = "<group>"; };
+		584D49AF433C14AFEC141C39 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		595EDAFD9D27F10EEE5A8114 /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
+		5A1B709DFC75FB5B7E95C53C /* QrScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrScannerView.swift; sourceTree = "<group>"; };
+		5C2E4CD7EA61B9CC6DC2353B /* QrPhotoPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrPhotoPickerView.swift; sourceTree = "<group>"; };
+		5CEB95366709BB8A2A7A9A51 /* AmneziaTunnel.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = AmneziaTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6273263B1E4E1A2B797913D2 /* ServerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDetailView.swift; sourceTree = "<group>"; };
+		65ED719C30739DCF5E5EE641 /* ConnectionStatusCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStatusCard.swift; sourceTree = "<group>"; };
+		6B83283CF0C4B33C9E06620B /* TunnelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelService.swift; sourceTree = "<group>"; };
+		6D419556BB7AE10A90BC650C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		7B7652E1123C130159191656 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		883847ED651D0E0117E1EBF0 /* ServerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListView.swift; sourceTree = "<group>"; };
+		89456F2EC51D8A783D6BAAAB /* QrCodeChunkAssembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeChunkAssembler.swift; sourceTree = "<group>"; };
+		A6AB9EBAB9084A8FFE2CC610 /* AmneziaCoreTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AmneziaCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADAD3EE92A7DF0B93DFD047B /* ZlibHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZlibHelperTests.swift; sourceTree = "<group>"; };
+		B156892A980CB1FE53F75532 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		C5E4B687FB54A12900BCDA12 /* ManualUrlInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualUrlInputView.swift; sourceTree = "<group>"; };
+		C90E403C517C70B9D0EFB382 /* ServerShareQrView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerShareQrView.swift; sourceTree = "<group>"; };
+		CA6DE8A395E83A2227EA8455 /* AwgParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwgParameters.swift; sourceTree = "<group>"; };
+		CFEACDCA6511CD49B00C8D83 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
+		D003F46FE4E8D36956ABB69E /* QrChunkAssemblerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrChunkAssemblerTests.swift; sourceTree = "<group>"; };
+		D1400B8D040D484C042DF531 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D46D9E42839FED9ACE46FE5C /* ProfileStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStorage.swift; sourceTree = "<group>"; };
+		DDCA533F550747842C8274D7 /* StatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPill.swift; sourceTree = "<group>"; };
+		E0DB218DB1A4804B726D50E4 /* ProfileStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStorageTests.swift; sourceTree = "<group>"; };
+		E13C68D263CE05AFA54C8FA7 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
+		E1E28A4D0F118A9A403CC122 /* DnsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DnsSettingsView.swift; sourceTree = "<group>"; };
+		E6788D15972FD24CB01FBB79 /* HapticFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedback.swift; sourceTree = "<group>"; };
+		E95B7F773F00A27536D7AA14 /* AmneziaTunnel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AmneziaTunnel.entitlements; sourceTree = "<group>"; };
+		EEC17D30CB6877D7CFCED4ED /* NetworkExtensionTunnelService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkExtensionTunnelService.swift; sourceTree = "<group>"; };
+		F83C107ECF957D7BD7341B3D /* GlassCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCard.swift; sourceTree = "<group>"; };
+		FB8AEFD997C261AF28C6C290 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		121F62FC0CAF4F84DF7E82BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A9E2EFF01AF8EC3FD366047 /* AmneziaCore.framework in Frameworks */,
+				7CD9C49623CDB34ACE219B48 /* AVFoundation.framework in Frameworks */,
+				17B8289A29A27E4198D34BFD /* Vision.framework in Frameworks */,
+				872CF6C5982A78A0653A38A6 /* PhotosUI.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1C4E033CDA002FFBA75F68C0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				856F4E53D571CAD2020E2F62 /* libz.tbd in Frameworks */,
+				3D8FF3B382B49F18EC2CE406 /* Network.framework in Frameworks */,
+				5F689DE316A6D4014B51ABD4 /* NetworkExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		997FC030706D6199ECA87173 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5A92FF47CB8DA4CAA9DD108 /* AmneziaCore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2832FBA2758CFA3B4222CC8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DAB8A755A321B68CD7E125E6 /* AmneziaCore.framework in Frameworks */,
+				02EC90AEF9ADC432A4D78081 /* NetworkExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		05950339D78370523EF882C6 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				580D8080B1F754511E54D95A /* AmneziaApp.swift */,
+				05315DAAB29D3F5A666B6D67 /* AppState.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		0A2AD13FEB4B417B206578EF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AD85BE3270FB960DBFB73965 /* Dashboard */,
+				F0F6D91640FC5AAEE9A76239 /* Import */,
+				7465C72AA46181CC8F5CF3F1 /* Servers */,
+				8A7A6C6F7D42977B2A503FCF /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		20D4EA6A7F1B261A48C6D4AF /* AmneziaTunnel */ = {
+			isa = PBXGroup;
+			children = (
+				E95B7F773F00A27536D7AA14 /* AmneziaTunnel.entitlements */,
+				584D49AF433C14AFEC141C39 /* Info.plist */,
+				7B7652E1123C130159191656 /* PacketTunnelProvider.swift */,
+			);
+			path = AmneziaTunnel;
+			sourceTree = "<group>";
+		};
+		41B1C33F1B8FFE3AB47CEAE2 /* Tunnel */ = {
+			isa = PBXGroup;
+			children = (
+				EEC17D30CB6877D7CFCED4ED /* NetworkExtensionTunnelService.swift */,
+				6B83283CF0C4B33C9E06620B /* TunnelService.swift */,
+			);
+			path = Tunnel;
+			sourceTree = "<group>";
+		};
+		43C22E803F19B26A0D61457F /* UIComponents */ = {
+			isa = PBXGroup;
+			children = (
+				F83C107ECF957D7BD7341B3D /* GlassCard.swift */,
+				E6788D15972FD24CB01FBB79 /* HapticFeedback.swift */,
+				DDCA533F550747842C8274D7 /* StatusPill.swift */,
+			);
+			path = UIComponents;
+			sourceTree = "<group>";
+		};
+		638FD9FAC2817351D7776E08 /* AmneziaCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				0F401AF6B2A4B70C6F6E1060 /* AmneziaUrlDecoderTests.swift */,
+				E0DB218DB1A4804B726D50E4 /* ProfileStorageTests.swift */,
+				D003F46FE4E8D36956ABB69E /* QrChunkAssemblerTests.swift */,
+				39FE61C886F11C0DBCA840BA /* WgQuickConfigParserTests.swift */,
+				ADAD3EE92A7DF0B93DFD047B /* ZlibHelperTests.swift */,
+			);
+			name = AmneziaCoreTests;
+			path = Tests/AmneziaCoreTests;
+			sourceTree = "<group>";
+		};
+		7465C72AA46181CC8F5CF3F1 /* Servers */ = {
+			isa = PBXGroup;
+			children = (
+				6273263B1E4E1A2B797913D2 /* ServerDetailView.swift */,
+				883847ED651D0E0117E1EBF0 /* ServerListView.swift */,
+				C90E403C517C70B9D0EFB382 /* ServerShareQrView.swift */,
+			);
+			path = Servers;
+			sourceTree = "<group>";
+		};
+		8A7A6C6F7D42977B2A503FCF /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				E1E28A4D0F118A9A403CC122 /* DnsSettingsView.swift */,
+				6D419556BB7AE10A90BC650C /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		908ACD9A92988314D89DFE80 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				D46D9E42839FED9ACE46FE5C /* ProfileStorage.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		A3BEA5E903766029BE0DE3D8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CA6DE8A395E83A2227EA8455 /* AwgParameters.swift */,
+				E13C68D263CE05AFA54C8FA7 /* ConnectionState.swift */,
+				51F87BF2C5753D8066BF2774 /* ServerProfile.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AB3A853FE71749E1C35058ED /* AmneziaApp */ = {
+			isa = PBXGroup;
+			children = (
+				226DEFEF4763CE7799B7871A /* AmneziaApp.entitlements */,
+				0AD533D32078B1AF42FB1671 /* Info.plist */,
+				05950339D78370523EF882C6 /* App */,
+				43C22E803F19B26A0D61457F /* UIComponents */,
+				0A2AD13FEB4B417B206578EF /* Views */,
+			);
+			path = AmneziaApp;
+			sourceTree = "<group>";
+		};
+		AD85BE3270FB960DBFB73965 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				1F61DEAD57931D8CDE885BF4 /* ConnectButton.swift */,
+				65ED719C30739DCF5E5EE641 /* ConnectionStatusCard.swift */,
+				FB8AEFD997C261AF28C6C290 /* DashboardView.swift */,
+				08330B630C75604B931A2B0D /* LiveTrafficStatsView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		B8F858475C57154C08247740 = {
+			isa = PBXGroup;
+			children = (
+				AB3A853FE71749E1C35058ED /* AmneziaApp */,
+				F120605FFFAE2CB88314E848 /* AmneziaCore */,
+				638FD9FAC2817351D7776E08 /* AmneziaCoreTests */,
+				20D4EA6A7F1B261A48C6D4AF /* AmneziaTunnel */,
+				BDE25F47132B47D3BE2BE934 /* Frameworks */,
+				F41BC38DE6459457E4BA884F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BDE25F47132B47D3BE2BE934 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D1400B8D040D484C042DF531 /* AVFoundation.framework */,
+				089DBCCB5FCEA6C145FBCA11 /* libz.tbd */,
+				B156892A980CB1FE53F75532 /* Network.framework */,
+				00F47ABB0F1912DA5B27E903 /* NetworkExtension.framework */,
+				595EDAFD9D27F10EEE5A8114 /* PhotosUI.framework */,
+				CFEACDCA6511CD49B00C8D83 /* Vision.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D516A18F636C47C342D19F0C /* Parsers */ = {
+			isa = PBXGroup;
+			children = (
+				1690A39F1D5151B4587475B2 /* AmneziaUrlDecoder.swift */,
+				89456F2EC51D8A783D6BAAAB /* QrCodeChunkAssembler.swift */,
+				2D3F3A80A1C75520F4352DD8 /* WgQuickConfigParser.swift */,
+				035AE0E70FF1A2FA1E2A344F /* ZlibHelper.swift */,
+			);
+			path = Parsers;
+			sourceTree = "<group>";
+		};
+		F0F6D91640FC5AAEE9A76239 /* Import */ = {
+			isa = PBXGroup;
+			children = (
+				1A3DC91D0C37358BEB600CFA /* AddServerSheet.swift */,
+				C5E4B687FB54A12900BCDA12 /* ManualUrlInputView.swift */,
+				5C2E4CD7EA61B9CC6DC2353B /* QrPhotoPickerView.swift */,
+				5A1B709DFC75FB5B7E95C53C /* QrScannerView.swift */,
+			);
+			path = Import;
+			sourceTree = "<group>";
+		};
+		F120605FFFAE2CB88314E848 /* AmneziaCore */ = {
+			isa = PBXGroup;
+			children = (
+				148250FE2BBE0E398E5BEF14 /* Info.plist */,
+				A3BEA5E903766029BE0DE3D8 /* Models */,
+				D516A18F636C47C342D19F0C /* Parsers */,
+				908ACD9A92988314D89DFE80 /* Storage */,
+				41B1C33F1B8FFE3AB47CEAE2 /* Tunnel */,
+			);
+			path = AmneziaCore;
+			sourceTree = "<group>";
+		};
+		F41BC38DE6459457E4BA884F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				022C8AD014BF68477209F17F /* AmneziaApp.app */,
+				02045E1AC133101530CDF8C1 /* AmneziaCore.framework */,
+				A6AB9EBAB9084A8FFE2CC610 /* AmneziaCoreTests.xctest */,
+				5CEB95366709BB8A2A7A9A51 /* AmneziaTunnel.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2E656DAE764752D17828EC7E /* AmneziaCoreTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0A51014D175FB86D2C3E2AD /* Build configuration list for PBXNativeTarget "AmneziaCoreTests" */;
+			buildPhases = (
+				AF638CAADF96BD962FC189BD /* Sources */,
+				997FC030706D6199ECA87173 /* Frameworks */,
+				15B2BE5E21757242E80BE8B7 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				088787B087A8816C4FAC36D7 /* PBXTargetDependency */,
+			);
+			name = AmneziaCoreTests;
+			packageProductDependencies = (
+			);
+			productName = AmneziaCoreTests;
+			productReference = A6AB9EBAB9084A8FFE2CC610 /* AmneziaCoreTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		5239A19AD363A497FFC1BDBB /* AmneziaTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B60FDF01F84204BC5107496A /* Build configuration list for PBXNativeTarget "AmneziaTunnel" */;
+			buildPhases = (
+				876DEA61A8DBDD9166B621A5 /* Sources */,
+				B2832FBA2758CFA3B4222CC8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4DE0D80B727E08DB59DF8BBB /* PBXTargetDependency */,
+			);
+			name = AmneziaTunnel;
+			packageProductDependencies = (
+			);
+			productName = AmneziaTunnel;
+			productReference = 5CEB95366709BB8A2A7A9A51 /* AmneziaTunnel.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		6017235F89C5552A27163583 /* AmneziaApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9055B07D943111DDB93A0710 /* Build configuration list for PBXNativeTarget "AmneziaApp" */;
+			buildPhases = (
+				31400A8586EA7965A42B4C41 /* Sources */,
+				121F62FC0CAF4F84DF7E82BC /* Frameworks */,
+				E791D74E0D08BA33662A55EB /* Embed Foundation Extensions */,
+				4F2E5D31AC05BB0902961E7F /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				06E7DD29497CFE50D15887B1 /* PBXTargetDependency */,
+				E79740B7C192702641BBC45E /* PBXTargetDependency */,
+			);
+			name = AmneziaApp;
+			packageProductDependencies = (
+			);
+			productName = AmneziaApp;
+			productReference = 022C8AD014BF68477209F17F /* AmneziaApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C985819825B223392667264E /* AmneziaCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AAB12B7657E1D63FF97A631B /* Build configuration list for PBXNativeTarget "AmneziaCore" */;
+			buildPhases = (
+				D14D99A72EC5EB3B698C57D1 /* Sources */,
+				1C4E033CDA002FFBA75F68C0 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AmneziaCore;
+			packageProductDependencies = (
+			);
+			productName = AmneziaCore;
+			productReference = 02045E1AC133101530CDF8C1 /* AmneziaCore.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E325CC2FB4C2582FA9687A85 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = E1DB5D3BC3B0472503E7489C /* Build configuration list for PBXProject "AmneziaClient" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = B8F858475C57154C08247740;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F41BC38DE6459457E4BA884F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6017235F89C5552A27163583 /* AmneziaApp */,
+				C985819825B223392667264E /* AmneziaCore */,
+				2E656DAE764752D17828EC7E /* AmneziaCoreTests */,
+				5239A19AD363A497FFC1BDBB /* AmneziaTunnel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		31400A8586EA7965A42B4C41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D96DB96269DB4A377DC999E /* AddServerSheet.swift in Sources */,
+				F1D778A5AAE2884EEFA32699 /* AmneziaApp.swift in Sources */,
+				C2EF8BBAAF9F8D024650BF9F /* AppState.swift in Sources */,
+				2885C501B8531427975F7CBC /* ConnectButton.swift in Sources */,
+				2DD4E500A8134D726746787A /* ConnectionStatusCard.swift in Sources */,
+				EB173CC19870E0968CB2FDDE /* DashboardView.swift in Sources */,
+				80F9462D9F7A14F37B067640 /* DnsSettingsView.swift in Sources */,
+				7E5F861DC8299F6746589E0A /* GlassCard.swift in Sources */,
+				B2A63FBDD42FEB1C7807F9DA /* HapticFeedback.swift in Sources */,
+				62C6D728D69ADFB60F53D2C2 /* LiveTrafficStatsView.swift in Sources */,
+				399DE9E9458B31D4D1563E5E /* ManualUrlInputView.swift in Sources */,
+				18B1D900444BBE8B71C8BF60 /* QrPhotoPickerView.swift in Sources */,
+				D40D62F7976EEFDC2647A3C5 /* QrScannerView.swift in Sources */,
+				2CCE2D1F5D156BC916E4CC42 /* ServerDetailView.swift in Sources */,
+				07ED5DE87F8BD0C6F44DEE28 /* ServerListView.swift in Sources */,
+				F8BA4E190E57E7382C62C0A0 /* ServerShareQrView.swift in Sources */,
+				E6A5EDC9723402466F6EC690 /* SettingsView.swift in Sources */,
+				4EE66B5A1B545A37808C2155 /* StatusPill.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		876DEA61A8DBDD9166B621A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6309A097C24DA0A55974A31C /* PacketTunnelProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF638CAADF96BD962FC189BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E3576870E4579478411B3D9F /* AmneziaUrlDecoderTests.swift in Sources */,
+				3C73FEF217334ACD233BC237 /* ProfileStorageTests.swift in Sources */,
+				DB4E8D2DD709F5F40AE69794 /* QrChunkAssemblerTests.swift in Sources */,
+				90935D225A6583C41FE530CF /* WgQuickConfigParserTests.swift in Sources */,
+				A6D12B422050A2EB4739BCDD /* ZlibHelperTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D14D99A72EC5EB3B698C57D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				822128856AF685C1C383B6A4 /* AmneziaUrlDecoder.swift in Sources */,
+				88232263A0FE4CD92D179789 /* AwgParameters.swift in Sources */,
+				FF49759D0812F82E78B61931 /* ConnectionState.swift in Sources */,
+				6EA9051C6412FA4C236DDCA0 /* NetworkExtensionTunnelService.swift in Sources */,
+				81DF14BFC165373440F7AB64 /* ProfileStorage.swift in Sources */,
+				CAFB900262CB136CDC3FADD8 /* QrCodeChunkAssembler.swift in Sources */,
+				60C7077A3D24EC9F340C4F86 /* ServerProfile.swift in Sources */,
+				021DABFAC5FED29D14606EFE /* TunnelService.swift in Sources */,
+				A094EBD239A4FFAB4880B199 /* WgQuickConfigParser.swift in Sources */,
+				E93584FEC7E15BE0F8ED93B2 /* ZlibHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		06E7DD29497CFE50D15887B1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C985819825B223392667264E /* AmneziaCore */;
+			targetProxy = B7C83F8969544FC931760BCF /* PBXContainerItemProxy */;
+		};
+		088787B087A8816C4FAC36D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C985819825B223392667264E /* AmneziaCore */;
+			targetProxy = E895C3334FB739663C6B3E44 /* PBXContainerItemProxy */;
+		};
+		4DE0D80B727E08DB59DF8BBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C985819825B223392667264E /* AmneziaCore */;
+			targetProxy = 07071BEB94F6033FE868AA34 /* PBXContainerItemProxy */;
+		};
+		E79740B7C192702641BBC45E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5239A19AD363A497FFC1BDBB /* AmneziaTunnel */;
+			targetProxy = 720E24505C848BC682931683 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		01E64A10B7E9133D2B0E1460 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AmneziaCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.core;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		0DDBF411AA504A3C93B95888 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AmneziaApp/AmneziaApp.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AmneziaApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.client;
+				PRODUCT_NAME = Amnezia;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		27549008EB370FCF0827FDAF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.AmneziaCoreTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9B0F28FF29740FFF8875BCBA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		A5F5891A063F08340EDA4452 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.AmneziaCoreTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AAD42514E2C44FCB209F129B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		DAE6AF98F783A436E3AC5BEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AmneziaCore/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.core;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		DBCB3C2A8E83318221A027B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AmneziaTunnel/AmneziaTunnel.entitlements;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AmneziaTunnel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.client.tunnel;
+				PRODUCT_NAME = AmneziaTunnel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E259E2CDDC54F997F1BDFBF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AmneziaTunnel/AmneziaTunnel.entitlements;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AmneziaTunnel/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.client.tunnel;
+				PRODUCT_NAME = AmneziaTunnel;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E8E990594700B1A32E589A6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = AmneziaApp/AmneziaApp.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = AmneziaApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.amnezia.client;
+				PRODUCT_NAME = Amnezia;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9055B07D943111DDB93A0710 /* Build configuration list for PBXNativeTarget "AmneziaApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E8E990594700B1A32E589A6C /* Debug */,
+				0DDBF411AA504A3C93B95888 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		A0A51014D175FB86D2C3E2AD /* Build configuration list for PBXNativeTarget "AmneziaCoreTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5F5891A063F08340EDA4452 /* Debug */,
+				27549008EB370FCF0827FDAF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AAB12B7657E1D63FF97A631B /* Build configuration list for PBXNativeTarget "AmneziaCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01E64A10B7E9133D2B0E1460 /* Debug */,
+				DAE6AF98F783A436E3AC5BEB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B60FDF01F84204BC5107496A /* Build configuration list for PBXNativeTarget "AmneziaTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBCB3C2A8E83318221A027B6 /* Debug */,
+				E259E2CDDC54F997F1BDFBF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E1DB5D3BC3B0472503E7489C /* Build configuration list for PBXProject "AmneziaClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B0F28FF29740FFF8875BCBA /* Debug */,
+				AAD42514E2C44FCB209F129B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E325CC2FB4C2582FA9687A85 /* Project object */;
+}
