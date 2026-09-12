@@ -88,6 +88,8 @@ public final class MacAppState: ObservableObject {
             selectedProfile = selected
         } else if let first = profiles.first {
             selectProfile(first)
+        } else {
+            selectedProfile = nil
         }
     }
 
@@ -142,6 +144,7 @@ public final class MacAppState: ObservableObject {
 
     public func deleteProfile(_ profile: ServerProfile) {
         if selectedProfile?.id == profile.id {
+            selectedProfile = nil
             if connectionState.isConnected {
                 Task {
                     try? await tunnelService.stopTunnel()

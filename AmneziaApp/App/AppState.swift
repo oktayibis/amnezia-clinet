@@ -111,6 +111,8 @@ public final class AppState: ObservableObject {
             selectedProfile = selected
         } else if let first = profiles.first {
             selectProfile(first)
+        } else {
+            selectedProfile = nil
         }
     }
 
@@ -180,6 +182,9 @@ public final class AppState: ObservableObject {
             Task {
                 try? await tunnelService.stopTunnel()
             }
+        }
+        if selectedProfile?.id == profile.id {
+            selectedProfile = nil
         }
         storage.deleteProfile(id: profile.id)
         loadProfiles()
