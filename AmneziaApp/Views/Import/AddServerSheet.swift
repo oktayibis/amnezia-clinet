@@ -120,19 +120,21 @@ public struct AddServerSheet: View {
                 switch result {
                 case .success(let urls):
                     guard let fileUrl = urls.first else { return }
-                    if fileUrl.startAccessingSecurityScopedResource() {
-                        defer { fileUrl.stopAccessingSecurityScopedResource() }
-                        if let content = try? String(contentsOf: fileUrl, encoding: .utf8) {
-                            do {
-                                _ = try appState.importFromText(content)
-                                dismiss()
-                            } catch {
-                                appState.errorMessage = error.localizedDescription
-                            }
-                        }
+                    let didAccess = fileUrl.startAccessingSecurityScopedResource()
+                    defer {
+                        if didAccess { fileUrl.stopAccessingSecurityScopedResource() }
+                    }
+                    do {
+                        _ = try appState.importFromFile(url: fileUrl)
+                        HapticFeedback.notification(type: .success)
+                        dismiss()
+                    } catch {
+                        appState.errorMessage = error.localizedDescription
+                        HapticFeedback.notification(type: .error)
                     }
                 case .failure(let error):
                     appState.errorMessage = error.localizedDescription
+                    HapticFeedback.notification(type: .error)
                 }
             }
         }

@@ -43,6 +43,10 @@ public struct ManualUrlInputView: View {
                             .foregroundColor(.white)
                             .padding(12)
                             .scrollContentBackground(.hidden)
+                            .autocorrectionDisabled()
+                            #if os(iOS)
+                            .textInputAutocapitalization(.never)
+                            #endif
 
                         if inputText.isEmpty {
                             Text("vpn://... or [Interface]...")

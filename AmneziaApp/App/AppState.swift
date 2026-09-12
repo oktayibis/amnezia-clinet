@@ -193,6 +193,18 @@ public final class AppState: ObservableObject {
         return profile
     }
 
+    public func importFromFile(url: URL) throws -> ServerProfile {
+        let data = try Data(contentsOf: url)
+        if let str = String(data: data, encoding: .utf8) {
+            return try importFromText(str)
+        }
+        if let decompressed = try? ZlibHelper.decompressQt(data),
+           let decompressedStr = String(data: decompressed, encoding: .utf8) {
+            return try importFromText(decompressedStr)
+        }
+        throw AmneziaDecoderError.base64DecodingFailed
+    }
+
     public func checkClipboardForConfig() {
         #if canImport(UIKit)
         if let string = UIPasteboard.general.string?.trimmingCharacters(in: .whitespacesAndNewlines),
