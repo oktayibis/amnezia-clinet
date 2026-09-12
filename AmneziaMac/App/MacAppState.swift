@@ -13,6 +13,7 @@ public final class MacAppState: ObservableObject {
     @Published public var errorMessage: String? = nil
     @Published public var detectedClipboardUrl: String? = nil
     @Published public var isSimulatedTunnel: Bool = false
+    @Published public var isPrivacyNoticePresented: Bool = false
 
     private let storage = ProfileStorage.shared
     private var tunnelService: TunnelService
@@ -131,6 +132,13 @@ public final class MacAppState: ObservableObject {
     }
 
     public func toggleConnection() {
+        let isPrivacyAccepted = UserDefaults.standard.bool(forKey: "awg_privacy_notice_accepted")
+        if !isPrivacyAccepted {
+            isPrivacyNoticePresented = true
+            errorMessage = "Please review and agree to the Privacy Notice before connecting."
+            return
+        }
+
         Task {
             do {
                 if connectionState.isConnected || connectionState.isBusy {

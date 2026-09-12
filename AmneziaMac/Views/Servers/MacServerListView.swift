@@ -218,7 +218,7 @@ public struct MacServerListView: View {
             Text("Add Connection / Server")
                 .font(.system(size: 18, weight: .bold))
 
-            Text("Paste a vpn:// link, amnezia:// URL, or raw WireGuard/AmneziaWG [Interface] configuration:")
+            Text("Paste a vpn:// link, awgconnect:// URL, or raw WireGuard/AmneziaWG [Interface] configuration:")
                 .font(.system(size: 12))
                 .foregroundColor(.secondary)
 

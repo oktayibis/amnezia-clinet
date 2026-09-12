@@ -32,8 +32,12 @@ public struct AmneziaApp: App {
             .tint(.green)
             .preferredColorScheme(.dark)
             .sheet(isPresented: Binding(
-                get: { !isPrivacyNoticeAccepted },
-                set: { isPrivacyNoticeAccepted = !$0 }
+                get: { !isPrivacyNoticeAccepted || appState.isPrivacyNoticePresented },
+                set: { newValue in
+                    if !newValue {
+                        appState.isPrivacyNoticePresented = false
+                    }
+                }
             )) {
                 PrivacyNoticeView()
             }

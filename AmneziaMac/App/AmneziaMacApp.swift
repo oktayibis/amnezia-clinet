@@ -23,11 +23,26 @@ struct AmneziaMacApp: App {
                     }
                 }
                 .sheet(isPresented: Binding(
-                    get: { !isPrivacyNoticeAccepted },
-                    set: { isPrivacyNoticeAccepted = !$0 }
+                    get: { !isPrivacyNoticeAccepted || appState.isPrivacyNoticePresented },
+                    set: { newValue in
+                        if !newValue {
+                            appState.isPrivacyNoticePresented = false
+                        }
+                    }
                 )) {
                     MacPrivacyNoticeView {
                         isPrivacyNoticeAccepted = true
+                        appState.isPrivacyNoticePresented = false
+                    }
+                }
+                .onChange(of: appState.isPrivacyNoticePresented) { isPresented in
+                    if isPresented {
+                        NSApp.activate(ignoringOtherApps: true)
+                        if let window = NSApp.windows.first(where: { $0.canBecomeKey }) {
+                            window.makeKeyAndOrderFront(nil)
+                        } else {
+                            openWindow(id: "main")
+                        }
                     }
                 }
         }

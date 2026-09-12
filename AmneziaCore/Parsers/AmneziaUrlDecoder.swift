@@ -261,7 +261,7 @@ public final class AmneziaUrlDecoder: Sendable {
         let awg = parseAwgParams(from: mergedAwgDict)
         let isAwg = containerType.contains("awg") || awg.hasObfuscation
         let protocolType: ProtocolType = isAwg ? .amneziaWg : .wireGuard
-        let serverName = description?.isEmpty == false ? description! : "Amnezia (\(hostName))"
+        let serverName = description?.isEmpty == false ? description! : "AWG (\(hostName))"
 
         return ServerProfile(
             name: serverName,

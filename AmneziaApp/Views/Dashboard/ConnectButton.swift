@@ -137,6 +137,9 @@ public struct ConnectButton: View {
             .frame(width: 280, height: 280)
         }
         .buttonStyle(ScaleButtonStyle())
+        .accessibilityLabel(isConnected ? "Disconnect from VPN" : "Connect to VPN")
+        .accessibilityValue(isConnected ? "Connected" : isConnecting ? "Connecting" : "Disconnected")
+        .accessibilityHint("Double tap to toggle the secure VPN connection")
         .onAppear {
             isPulsing = true
         }

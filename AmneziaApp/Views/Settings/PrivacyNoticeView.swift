@@ -93,7 +93,17 @@ public struct PrivacyNoticeView: View {
             }
             .navigationTitle("Privacy Notice")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if isPrivacyNoticeAccepted {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button("Done") {
+                            dismiss()
+                        }
+                    }
+                }
+            }
         }
+        .interactiveDismissDisabled(!isPrivacyNoticeAccepted)
     }
 
     private func privacyBullet(icon: String, title: String, description: String) -> some View {

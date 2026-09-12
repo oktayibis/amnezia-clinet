@@ -32,7 +32,7 @@ public struct QrPhotoPickerView: View {
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
 
-                    Text("Pick an image or screenshot from your library containing an Amnezia QR code.")
+                    Text("Pick an image or screenshot from your library containing a VPN configuration QR code.")
                         .font(.system(size: 14))
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -139,7 +139,7 @@ public struct QrPhotoPickerView: View {
             }
 
             DispatchQueue.main.async {
-                errorMessage = "Could not find a valid Amnezia QR code in the photo"
+                errorMessage = "Could not find a valid VPN configuration QR code in the photo"
             }
         }
 

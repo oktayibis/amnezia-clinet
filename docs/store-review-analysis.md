@@ -4,7 +4,7 @@
 **Uygulama Adı:** AWG Connect (Eski Kod Adı: Amnezia Client)  
 **Paket Kimliği (Bundle Identifier):** `com.oktayibis.awgconnect`  
 **Geliştirici:** Oktay İbiş  
-**Hedef Platformlar:** iOS 17.0+ (iPhone, iPad), macOS 14.0+ (Apple Silicon & Intel)
+**Hedef Platformlar:** iOS 16.0+ (iPhone), macOS 14.0+ (Apple Silicon & Intel)
 
 ---
 
@@ -56,9 +56,11 @@ Yapılan kapsamlı kod ve mimari denetiminde tespit edilen 19 bulgu ve alınan a
 - [x] **Network Extension Entitlement:** `com.apple.developer.networking.networkextension` (`packet-tunnel-provider`).
 - [x] **Privacy Manifest:** `AmneziaApp/PrivacyInfo.xcprivacy` ve `AmneziaTunnel/PrivacyInfo.xcprivacy` dahil edildi.
 - [x] **Gizlilik Politikası:** `PRIVACY.md` hazırlandı, sıfır loglama ve üçüncü taraf veri paylaşımı olmadığı belgelendi.
-- [x] **Guideline 5.4 VPN Uyarısı:** İlk açılışta gösterilen `PrivacyNoticeView` onay ekranı eklendi.
+- [x] **Guideline 5.4 VPN Uyarısı & Kapısı:** İlk açılışta gösterilen `PrivacyNoticeView` onay ekranı eklendi, `interactiveDismissDisabled` ile atlanması engellendi; `AppState.toggleConnection` içinde onay doğrulanmadan tünel bağlantısına izin verilmiyor.
+- [x] **Erişilebilirlik (VoiceOver - Guideline 2.5.8):** `ConnectButton` için dinamik `accessibilityLabel`, `accessibilityValue` ve `accessibilityHint` eklendi.
 - [x] **Pano İzni (iOS 16+):** Otomatik okuma iptal edildi, kullanıcı tetiklemeli buton yapıldı.
 - [x] **Kamera İzni:** QR kod tarayıcı için `NSCameraUsageDescription` mevcut ve amaca uygun.
+- [x] **Kalan Marka Metinleri (Guideline 2.3.8):** QR paylaşım, sunucu listesi, fotoğraftan içe aktarma ve varsayılan profil adlarındaki tüm "Amnezia" ibareleri temizlendi.
 - [x] **Export Compliance:** `ITSAppUsesNonExemptEncryption = false`.
 - [x] **Simülasyon Koruması:** Release derlemesinde mock tünel ve sahte butonlar engellendi.
 
@@ -66,13 +68,14 @@ Yapılan kapsamlı kod ve mimari denetiminde tespit edilen 19 bulgu ve alınan a
 - [x] **Display Name:** "AWG Connect".
 - [x] **Bundle Identifier:** `com.oktayibis.awgconnect.mac` ve `com.oktayibis.awgconnect.mac.tunnel`.
 - [x] **App Sandbox:** `com.apple.security.app-sandbox = true`.
-- [x] **Network Entitlements:** `com.apple.security.network.client = true` ve `com.apple.security.network.server = true`.
+- [x] **Network Entitlements:** `com.apple.security.network.client = true` ve `com.apple.security.files.user-selected.read-only = true` (sürükle-bırak ve dosya içe aktarma için).
 - [x] **Packet Tunnel Extension:** `AmneziaTunnelMac` target'ı ve `AmneziaTunnelMac.entitlements` oluşturuldu.
 - [x] **App Groups:** `group.com.oktayibis.awgconnect` macOS ana uygulama ve tunnel extension'a eklendi.
 - [x] **Privacy Manifest:** `AmneziaMac/PrivacyInfo.xcprivacy` eklendi.
 - [x] **Sahte Veri Temizliği:** Sahte rastgele ping ve tanımsız 0 B/s sayaçları temizlendi.
 - [x] **Açılışta Bağlan:** `connect-on-launch` işlevi ana pencere açılışına bağlandı.
-- [x] **Guideline 5.4 VPN Uyarısı:** İlk açılışta gösterilen `MacPrivacyNoticeView` eklendi.
+- [x] **Guideline 5.4 VPN Uyarısı & Kapısı:** İlk açılışta gösterilen `MacPrivacyNoticeView` eklendi; menü çubuğundan onaysız bağlanılmaya çalışıldığında pencere öne getirilerek gizlilik bildirimi zorunlu kılındı.
+- [x] **Kalan Marka Metinleri (Guideline 2.3.8):** Sunucu listesi ve içe aktarma metinlerindeki tüm marka ifadeleri güncellendi.
 
 ---
 
@@ -187,6 +190,87 @@ Bu hazırlık çalışması kapsamında aşağıdaki yerel kontroller başarıyl
    - `xcodebuild -scheme AmneziaMac -configuration Release CODE_SIGNING_ALLOWED=NO build`: **BUILD SUCCEEDED** (Ürün: `AWG Connect.app` ve `AmneziaTunnelMac.appex`).
 6. **macOS Tunnel Target Derlemesi:**
    - `xcodebuild -target AmneziaTunnelMac -configuration Release CODE_SIGNING_ALLOWED=NO build`: **BUILD SUCCEEDED**.
+
+---
+
+# BÖLÜM 2 — Android & Android TV: Google Play İnceleme Hazırlık Raporu
+
+**Modüller:** `AmneziaAndroid/core`, `AmneziaAndroid/mobile` (telefon, `com.oktayibis.awgconnect`), `AmneziaAndroid/tv` (Android TV, `com.oktayibis.awgconnect.tv`)  
+**Araç zinciri:** Gradle 8.11.1 · AGP 8.9.3 · Kotlin 2.0.21 · Compose BOM 2025.06.01 · compileSdk 36  
+**Hedef API:** telefon 36 (Play'in 31 Ağustos 2026 sonrası yeni uygulama şartı), TV 35 (TV için asgari 34)
+
+## 7. Yönetici Özeti (Android)
+
+> [!IMPORTANT]
+> Bu tur sonunda Android ve Android TV uygulamaları **hedef API, R8/minify, imzalama altyapısı, foreground VpnService iskeleti, sistem VPN izin akışı, yedekleme kapatma, Play VpnService beyan ekranı, gizlilik politikası ve marka** açısından Google Play standartlarına getirildi.
+> Ancak iOS/macOS ile aynı temel eksik burada da geçerlidir: **`AmneziaVpnService` TUN arayüzünü kurar fakat WireGuard/AmneziaWG şifreleme ve paket iletimi yapmaz.** `amneziawg-android` backend'i entegre edilene kadar Play'e **gönderilmemelidir**; aksi halde "işlevsiz uygulama" ve VpnService politikasının "cihazdan tünel ucuna şifreli veri" şartı gerekçesiyle ret alınır.
+
+## 8. Bulgular ve Düzeltmeler Tablosu (Android, 24 Madde)
+
+| No | Kategori | Bulgu | Play Politikası / Gereksinim | Önem | Durum |
+|:---|:---|:---|:---|:---:|:---:|
+| **A1** | İşlevsellik | `MobileAppState`/`TvAppState` her zaman `MockTunnelService` kullanıyordu; gerçek `VpnService` hiç başlatılmıyordu, "Connection Encrypted" yazıyordu. | Yanıltıcı İddialar, VpnService Politikası | **KRİTİK** | **DÜZELTİLDİ** (`RealTunnelService` eklendi; Mock yalnızca `BuildConfig.DEBUG`) |
+| **A2** | VPN Servisi | `VpnService.prepare()` yok, profil verisi kullanılmıyor, `startForeground()` yok, `foregroundServiceType` yok. | Android 14 FGS türü zorunluluğu, VpnService Politikası | **KRİTİK** | **DÜZELTİLDİ** (izin akışı, `systemExempted` FGS + bildirim, profilden adres/rota/DNS/MTU) |
+| **A3** | Play Console | VpnService beyan formu, Data Safety, gizlilik politikası URL'i, uygulama içi beyan yok. | VpnService Politikası, Kullanıcı Verileri | **KRİTİK** | **KISMEN** (uygulama içi ilk açılış beyanı + `PRIVACY.md` eklendi; Console formları takip işi) |
+| **A4** | Marka | `org.amnezia.mobile`/`org.amnezia.tv`, "Amnezia"/"Amnezia TV" etiketleri. | Taklit (Impersonation) | **KRİTİK** | **DÜZELTİLDİ** (`com.oktayibis.awgconnect[.tv]`, "AWG Connect [TV]") |
+| **A5** | Hedef API | `mobile` targetSdk 35; 31 Ağustos 2026'dan itibaren yeni uygulamalar için 36 şart. | Target API Level | **KRİTİK** | **DÜZELTİLDİ** (telefon 36, TV 35, compileSdk 36, AGP 8.9.3) |
+| **A6** | Lisans | LICENSE yok. | Açık kaynak | **KRİTİK** | **DÜZELTİLDİ** (repo kökünde MIT) |
+| **A7** | Yanıltıcı UI | Rastgele hız/ping üreten simülasyon üretimde, varsayılan açık. | Yanıltıcı İddialar | **YÜKSEK** | **DÜZELTİLDİ** (release'de erişilemez; rozet/toggle `BuildConfig.DEBUG`) |
+| **A8** | Ayarlar | Kill Switch ve DNS seçimi kalıcı değildi ve servise gitmiyordu. Android'de uygulama kill switch kuramaz. | İşlevsellik | **YÜKSEK** | **DÜZELTİLDİ** (`AppSettings` kalıcı; DNS `Builder.addDnsServer`; Kill Switch satırı sistem Always-on VPN ayarına yönlendiriyor) |
+| **A9** | Güvenlik | Özel anahtarlar düz SharedPreferences + `allowBackup="true"`. | Kullanıcı Verileri | **YÜKSEK** | **KISMEN** (`allowBackup="false"`; Keystore ile şifreleme takip işi) |
+| **A10** | Pano | Her `onResume`'da pano okunuyordu (Android 12+ uyarısı). | Kullanıcı Verileri | **YÜKSEK** | **DÜZELTİLDİ** (yalnızca "Import from clipboard" butonu) |
+| **A11** | Derleme | R8 kapalı, ProGuard dosyaları eksik. | Uygulama kalitesi | **YÜKSEK** | **DÜZELTİLDİ** (`isMinifyEnabled` + `isShrinkResources`, serialization keep kuralları) |
+| **A12** | İmzalama | Release imzalama yapılandırması yok. | Play App Signing | **YÜKSEK** | **DÜZELTİLDİ** (`keystore.properties` tabanlı `signingConfigs.release`; dosya git dışı) |
+| **A13** | Paketleme | Yalnızca APK üretiliyordu. | AAB zorunluluğu | **YÜKSEK** | **DÜZELTİLDİ** (`bundleRelease` doğrulandı) |
+| **A14** | İkon | Adaptive icon yok (lint `IconLauncherShape`). | Kalite | **ORTA** | **DÜZELTİLDİ** (`mipmap-anydpi-v26` + foreground/background) |
+| **A15** | Sürüm metni | Sabit "1.0.0 (Build 1)". | Kalite | **DÜŞÜK** | **DÜZELTİLDİ** (`BuildConfig.VERSION_NAME/CODE`) |
+| **A16** | Manifest | `android:label` sabit metin. | Lokalizasyon | **DÜŞÜK** | **DÜZELTİLDİ** (`@string/app_name`) |
+| **A17** | Bağımlılık | `tv-foundation` alfa bağımlılığı (kullanılmıyordu). | Kararlılık | **DÜŞÜK** | **DÜZELTİLDİ** (kaldırıldı) |
+| **A18** | Boyut | ML Kit bundled model. | Opsiyonel | **DÜŞÜK** | **TAKİP** (`play-services-mlkit-barcode-scanning` alternatifi) |
+| **A19** | Model | `ServerProfile` iOS ile eşdeğer değil (S3/S4, I1–I5, keepalive). | Tünel entegrasyonu | **DÜŞÜK** | **TAKİP** (backend entegrasyonuyla birlikte) |
+| **A20** | Kod kalitesi | Mock scope sızıntısı, gereksiz `Application.instance`. | — | **DÜŞÜK** | **TAKİP** |
+| **A21** | Deep link | Yalnızca `vpn` şeması. | — | **DÜŞÜK** | **DÜZELTİLDİ** (`awgconnect://` eklendi) |
+| **A22** | Lokalizasyon | Tüm metinler Kotlin içinde. | — | **DÜŞÜK** | **TAKİP** |
+| **A23** | 16 KB sayfa | Native `.so` gelince zorunlu. | 16 KB uyumluluğu | **ORTA** | **TAKİP** (backend seçiminde uyumlu sürüm) |
+| **A24** | Lint | `lintRelease` `UnsafeOptInUsageError` ile başarısızdı. | CI | **ORTA** | **DÜZELTİLDİ** (`@androidx.annotation.OptIn(ExperimentalGetImage::class)`) |
+
+## 9. Google Play Console Kontrol Listesi
+
+### A. Telefon (`com.oktayibis.awgconnect`)
+- [x] `targetSdk 36`, `compileSdk 36`, AGP 8.9.3.
+- [x] `android:allowBackup="false"` (özel anahtarlar yedeğe gitmez).
+- [x] `AmneziaVpnService`: `BIND_VPN_SERVICE`, `foregroundServiceType="systemExempted"`, `FOREGROUND_SERVICE_SYSTEM_EXEMPTED` izni, kalıcı bildirim + "Disconnect" aksiyonu, `onRevoke()`.
+- [x] `VpnService.prepare()` onay akışı `MainActivity` içinde `ActivityResult` ile.
+- [x] Android 13+ `POST_NOTIFICATIONS` runtime isteği.
+- [x] İlk açılışta `PrivacyNoticeScreen` (Play VpnService beyanı); Settings → Privacy Policy linki.
+- [x] Pano yalnızca kullanıcı dokunuşuyla okunur.
+- [x] R8 + resource shrinking; `bundleRelease` üretir; imza `keystore.properties` ile.
+- [x] Adaptive icon; `@string/app_name`.
+- [ ] **Play Console → App content → VpnService beyanı:** "Core VPN functionality" seçilir; açıklama: kullanıcıya ait WireGuard/AmneziaWG sunucularına istemci; veri toplanmaz.
+- [ ] **Data Safety:** "Veri toplanmıyor / paylaşılmıyor"; şifreleme: evet (tünel); silme: uygulama verisi.
+- [ ] **Gizlilik politikası URL'i:** `https://github.com/oktayibis/amnezia-clinet/blob/main/PRIVACY.md` (veya kendi alan adınız).
+- [ ] **Mağaza açıklaması:** VpnService kullanımı ve "kendi sunucunuz gerekir" ifadesi açıkça yazılır.
+- [ ] **Upload keystore** oluşturulup Play App Signing'e kaydedilir.
+- [ ] Gerçek tünel backend'i entegre edilmeden **gönderilmez**.
+
+### B. Android TV (`com.oktayibis.awgconnect.tv`)
+- [x] `targetSdk 35` (TV için asgari 34), `leanback` zorunlu, `touchscreen` zorunlu değil, 320×180 banner.
+- [x] Kamera izni yok; içe aktarma dosya/URL ile.
+- [x] Tüm ekranlar D-pad ile gezilebilir (`TvFocusableCard`), tek odak hedefli beyan ekranı.
+- [x] Aynı VpnService/izin akışı; `POST_NOTIFICATIONS`.
+- [ ] Play Console'da TV form factor'ü için ayrı inceleme (ekran görüntüleri 1920×1080, banner) ve aynı VpnService beyanı.
+
+## 10. Gerçek Tünel Entegrasyon Yol Haritası (Android)
+
+1. **Backend:** `com.zaneschepke:amneziawg-android` (Maven Central, Apache-2.0; amneziawg-go tabanlı `GoBackend`) veya `amnezia-vpn/amneziawg-android` kaynak derlemesi (Go + NDK). 16 KB sayfa uyumlu sürüm seçilir; AGP ≥ 8.5.1 zaten sağlanıyor.
+2. **Yapılandırma dönüşümü:** `ServerProfile` → `org.amnezia.awg.config.Config` (Interface: private key, addresses, DNS, MTU, Jc/Jmin/Jmax/S1/S2/H1–H4; Peer: public key, PSK, endpoint, allowed IPs, keepalive). `ServerProfile`'a eksik alanlar (A19) eklenir.
+3. **Servis:** `AmneziaVpnService` yerine kütüphanenin `GoBackend.VpnService` alt sınıfı; `RealTunnelService.startTunnel` → `backend.setState(tunnel, Tunnel.State.UP, config)`. Mevcut bildirim, izin ve DNS override mantığı korunur.
+4. **İstatistik:** `backend.getStatistics(tunnel)` ile rx/tx byte'ları `ConnectionStats`'a; `providesTrafficStats = true` yapılır ve hız kartları otomatik görünür.
+5. **Doğrulama:** 16 KB emülatörde (`bundletool build-apks --connected-device`) kurulum; `adb shell dumpsys activity services` ile FGS tipi; gerçek sunucuya bağlanıp `curl ifconfig.me` çıkışı.
+
+## 11. Doğrulama ve Derleme Çıktıları (Android)
+
+__ANDROID_VERIFICATION__
 
 ---
 *Hazırlayan: Oktay İbiş*  

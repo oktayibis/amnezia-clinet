@@ -67,7 +67,7 @@ public struct ServerShareQrView: View {
                                 .font(.system(size: 16, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
 
-                            Text("Scan with Amnezia or WireGuard to import")
+                            Text("Scan with AWG Connect or WireGuard to import")
                                 .font(.system(size: 12))
                                 .foregroundColor(.secondary)
                         }

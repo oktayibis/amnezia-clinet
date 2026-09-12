@@ -153,7 +153,7 @@ public final class WgQuickConfigParser: Sendable {
         )
 
         let protocolType: ProtocolType = awg.hasObfuscation ? .amneziaWg : .wireGuard
-        let name = profileName ?? "Amnezia (\(host))"
+        let name = profileName ?? "AWG (\(host))"
 
         return ServerProfile(
             name: name,

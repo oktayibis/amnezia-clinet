@@ -23,7 +23,7 @@ public struct ManualUrlInputView: View {
                 Color.black.ignoresSafeArea()
 
                 VStack(spacing: 16) {
-                    Text("Paste an Amnezia connection string (starts with vpn://) or a WireGuard / AmneziaWG configuration.")
+                    Text("Paste a connection string (starts with vpn:// or awgconnect://) or a WireGuard / AmneziaWG configuration.")
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
                         .padding(.horizontal, 20)

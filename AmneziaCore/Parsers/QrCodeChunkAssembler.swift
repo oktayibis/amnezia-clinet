@@ -34,7 +34,7 @@ public final class QrCodeChunkAssembler: @unchecked Sendable {
                 let profile = try AmneziaUrlDecoder.decode(trimmed)
                 return .single(profile)
             } catch {
-                return .invalid("Failed to decode Amnezia URL: \(error.localizedDescription)")
+                return .invalid("Failed to decode configuration URL: \(error.localizedDescription)")
             }
         }
 

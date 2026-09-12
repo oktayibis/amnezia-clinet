@@ -180,7 +180,7 @@ public struct ServerListView: View {
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(.white)
 
-            Text("Import a server via QR code or connection URL to start using Amnezia.")
+            Text("Import a server via QR code or connection URL to start using AWG Connect.")
                 .font(.system(size: 14))
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)

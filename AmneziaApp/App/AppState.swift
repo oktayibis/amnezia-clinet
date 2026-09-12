@@ -20,6 +20,7 @@ public final class AppState: ObservableObject {
     @Published public var errorMessage: String? = nil
     @Published public var detectedClipboardUrl: String? = nil
     @Published public var isSimulatedTunnel: Bool = false
+    @Published public var isPrivacyNoticePresented: Bool = false
 
     public enum SheetType: Identifiable {
         case qrScanner
@@ -166,6 +167,13 @@ public final class AppState: ObservableObject {
 
     public func toggleConnection() {
         HapticFeedback.impact(style: .heavy)
+        let isPrivacyAccepted = UserDefaults.standard.bool(forKey: "awg_privacy_notice_accepted")
+        if !isPrivacyAccepted {
+            isPrivacyNoticePresented = true
+            HapticFeedback.notification(type: .warning)
+            return
+        }
+
         Task {
             do {
                 if connectionState.isConnected || connectionState.isBusy {
