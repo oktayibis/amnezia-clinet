@@ -81,3 +81,23 @@ targets:
       - path: Tests/AmneziaCoreTests
     dependencies:
       - target: AmneziaCore
+
+schemes:
+  AmneziaApp:
+    build:
+      targets:
+        AmneziaApp: all
+        AmneziaCore: all
+        AmneziaTunnel: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - AmneziaCoreTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
