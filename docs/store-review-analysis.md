@@ -270,7 +270,13 @@ Bu hazırlık çalışması kapsamında aşağıdaki yerel kontroller başarıyl
 
 ## 11. Doğrulama ve Derleme Çıktıları (Android)
 
-__ANDROID_VERIFICATION__
+Bu tur kapsamında yerel olarak çalıştırılan komutlar ve sonuçları (`AmneziaAndroid/`):
+
+1. **Unit testler:** `./gradlew :core:testDebugUnitTest` → 3 test, 0 hata.
+2. **Debug APK:** `./gradlew :mobile:assembleDebug` → `mobile-debug.apk` (Simulated Tunnel toggle'ı yalnızca bu derlemede görünür).
+3. **Play paketleri (R8 açık):** `./gradlew :mobile:bundleRelease :tv:bundleRelease` → `mobile-release.aab` (14,8 MB), `tv-release.aab` (2,9 MB). `keystore.properties` olmadığı için imzasız üretildi; Play'e yüklemeden önce upload keystore ile imzalanmalı.
+4. **Lint:** `./gradlew :mobile:lintRelease :tv:lintRelease` → **0 Error**. Kalan uyarılar: mobile 32 (`IconLauncherShape` ×10 ve `IconDuplicates` ×5 eski yoğunluk PNG'leri için, `GradleDependency` ×8, `UseKtx` ×3, `MonochromeLauncherIcon` ×2, `DataExtractionRules` ×1, diğer ×3), tv 9 (`GradleDependency` ×5, `OldTargetApi` ×1 — TV bilinçli olarak 35, `DataExtractionRules` ×1, ikon ×2). Önceki turdaki `UnsafeOptInUsageError` hatası giderildi.
+5. **Çalışma zamanı doğrulaması (yapılmadı):** Emülatörde sistem VPN izin diyaloğu, kalıcı bildirim ve TV D-pad gezinmesi bu turda cihaz üzerinde denenmedi; gönderim öncesi API 34+ ve TV emülatörlerinde manuel kontrol gerekir.
 
 ---
 *Hazırlayan: Oktay İbiş*  

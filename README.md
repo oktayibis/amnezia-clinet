@@ -122,14 +122,25 @@ xcodebuild -project AmneziaClient.xcodeproj -scheme AmneziaCoreTests -destinatio
 
 ---
 
-## 🤖 Android Parity Roadmap
+## 🤖 Android & Android TV
 
-The architecture was intentionally designed with clean separation between the protocol core (`AmneziaCore`) and UI (`AmneziaApp`). 
+`AmneziaAndroid/` contains the Kotlin / Jetpack Compose counterpart with the same dark glassmorphic design system:
 
-The next phase will introduce the **Android** counterpart using:
-- **Jetpack Compose** matching the dark glassmorphic design system.
-- Shared models and parsers directly adaptable or portable to Kotlin.
-- Android `VpnService` implementing AmneziaWG tunnel management.
+- `core` — shared models, `vpn://` / wg-quick parsers, `ProfileStorage`, `AppSettings`, the foreground `VpnService` (`AmneziaVpnService`) and the `RealTunnelService` facade.
+- `mobile` — phone app (`com.oktayibis.awgconnect`): QR scanning (CameraX + ML Kit), file / URL / clipboard import, DNS override, connect-on-launch.
+- `tv` — Android TV app (`com.oktayibis.awgconnect.tv`): D-pad navigable Leanback UI with file / URL import.
+
+```bash
+cd AmneziaAndroid
+./gradlew :core:testDebugUnitTest          # unit tests
+./gradlew :mobile:assembleDebug            # phone debug APK
+./gradlew :mobile:bundleRelease :tv:bundleRelease   # Play Store AABs (R8 enabled)
+```
+
+Release builds are signed only when `keystore.properties` exists (see `keystore.properties.example`); otherwise an unsigned bundle is produced for CI.
+
+> [!WARNING]
+> On all platforms the tunnel engine (WireGuard / AmneziaWG packet processing) is **not yet integrated**. The apps build, import configs, request system VPN permission and create the TUN interface, but no traffic is encrypted or forwarded. See `docs/store-review-analysis.md` for the integration work packages (`amneziawg-apple` for Apple, `amneziawg-android` for Android) before any store submission.
 
 ---
 

@@ -59,6 +59,11 @@ targets:
           - UIInterfaceOrientationPortrait
     entitlements:
       path: AmneziaApp/AmneziaApp.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.oktayibis.awgconnect
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect
@@ -88,6 +93,11 @@ targets:
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PacketTunnelProvider
     entitlements:
       path: AmneziaTunnel/AmneziaTunnel.entitlements
+      properties:
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.oktayibis.awgconnect
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.tunnel
@@ -150,6 +160,14 @@ targets:
               - awgconnect
     entitlements:
       path: AmneziaMac/AmneziaMac.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.files.user-selected.read-only: true
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.oktayibis.awgconnect
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.mac
@@ -181,6 +199,13 @@ targets:
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PacketTunnelProvider
     entitlements:
       path: AmneziaTunnel/AmneziaTunnelMac.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.developer.networking.networkextension:
+          - packet-tunnel-provider
+        com.apple.security.application-groups:
+          - group.com.oktayibis.awgconnect
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.oktayibis.awgconnect.mac.tunnel
