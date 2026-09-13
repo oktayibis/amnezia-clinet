@@ -17,6 +17,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,17 +42,17 @@ import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -64,7 +65,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -74,14 +74,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import org.amnezia.mobile.ui.theme.CyberGreen
-import org.amnezia.mobile.ui.theme.DarkBackground
-import org.amnezia.mobile.ui.theme.ErrorRed
-import org.amnezia.mobile.ui.theme.SurfaceBorder
-import org.amnezia.mobile.ui.theme.SurfaceCard
-import org.amnezia.mobile.ui.theme.SurfaceDark
-import org.amnezia.mobile.ui.theme.TextPrimary
-import org.amnezia.mobile.ui.theme.TextSecondary
 import org.amnezia.mobile.viewmodel.MobileAppState
 import java.util.concurrent.Executors
 
@@ -97,13 +89,12 @@ fun AddServerBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        containerColor = SurfaceDark,
-        dragHandle = null
+        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(horizontal = 20.dp, vertical = 8.dp)
         ) {
             // Header
             Row(
@@ -112,33 +103,27 @@ fun AddServerBottomSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Add Server",
-                    color = TextPrimary,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "Add server",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 IconButton(onClick = onDismiss) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = "Close",
-                        tint = TextSecondary
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Tab Row
-            TabRow(
+            // Primary Tab Row
+            PrimaryTabRow(
                 selectedTabIndex = selectedTab,
-                containerColor = SurfaceCard,
-                contentColor = CyberGreen,
-                indicator = { tabPositions ->
-                    TabRowDefaults.SecondaryIndicator(
-                        Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = CyberGreen
-                    )
-                },
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                contentColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.clip(RoundedCornerShape(12.dp))
             ) {
                 tabs.forEachIndexed { index, title ->
@@ -148,9 +133,13 @@ fun AddServerBottomSheet(
                         text = {
                             Text(
                                 text = title,
-                                color = if (selectedTab == index) CyberGreen else TextSecondary,
-                                fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 14.sp
+                                style = MaterialTheme.typography.titleSmall,
+                                color = if (selectedTab == index) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onSurfaceVariant
+                                },
+                                fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Normal
                             )
                         }
                     )
@@ -164,6 +153,8 @@ fun AddServerBottomSheet(
                 1 -> QrScanTab(appState, onSuccess = onDismiss)
                 2 -> FileImportTab(appState, onSuccess = onDismiss)
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
@@ -185,19 +176,24 @@ private fun TextImportTab(
                 errorText = null
             },
             label = { Text("vpn:// URL or WG config") },
-            placeholder = { Text("vpn://... or [Interface]...", color = TextSecondary.copy(alpha = 0.5f)) },
+            placeholder = {
+                Text(
+                    "vpn://... or [Interface]...",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = CyberGreen,
-                unfocusedBorderColor = SurfaceBorder,
-                focusedTextColor = TextPrimary,
-                unfocusedTextColor = TextPrimary,
-                focusedContainerColor = SurfaceCard,
-                unfocusedContainerColor = SurfaceCard,
-                focusedLabelColor = CyberGreen,
-                unfocusedLabelColor = TextSecondary
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+                focusedLabelColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
             ),
             shape = RoundedCornerShape(14.dp)
         )
@@ -209,33 +205,35 @@ private fun TextImportTab(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable {
-                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-                        val clip = clipboard?.primaryClip?.getItemAt(0)?.text?.toString()
-                        if (!clip.isNullOrBlank()) {
-                            inputText = clip.trim()
-                        }
+            Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = MaterialTheme.colorScheme.surfaceContainer,
+                modifier = Modifier.clickable {
+                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+                    val clip = clipboard?.primaryClip?.getItemAt(0)?.text?.toString()
+                    if (!clip.isNullOrBlank()) {
+                        inputText = clip.trim()
                     }
-                    .background(SurfaceCard)
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically
+                }
             ) {
-                Icon(
-                    imageVector = Icons.Default.ContentPaste,
-                    contentDescription = null,
-                    tint = CyberGreen,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    text = "Paste from Clipboard",
-                    color = CyberGreen,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ContentPaste,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "Paste from clipboard",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
 
@@ -243,8 +241,8 @@ private fun TextImportTab(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = errorText ?: "",
-                color = ErrorRed,
-                fontSize = 12.sp
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error
             )
         }
 
@@ -267,20 +265,21 @@ private fun TextImportTab(
                 .fillMaxWidth()
                 .height(52.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = CyberGreen,
-                contentColor = DarkBackground
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
-            shape = RoundedCornerShape(14.dp)
+            shape = RoundedCornerShape(100.dp)
         ) {
             Text(
-                text = "Import Configuration",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                text = "Import configuration",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
             )
         }
     }
 }
 
+@androidx.annotation.OptIn(ExperimentalGetImage::class)
 @Composable
 private fun QrScanTab(
     appState: MobileAppState,
@@ -315,29 +314,33 @@ private fun QrScanTab(
             Icon(
                 imageVector = Icons.Default.QrCodeScanner,
                 contentDescription = null,
-                tint = TextSecondary,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(56.dp)
             )
             Spacer(modifier = Modifier.height(14.dp))
             Text(
-                text = "Camera Permission Required",
-                color = TextPrimary,
-                fontSize = 16.sp,
+                text = "Camera permission required",
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = "Please allow camera access to scan QR codes",
-                color = TextSecondary,
-                fontSize = 13.sp,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = { launcher.launch(Manifest.permission.CAMERA) },
-                colors = ButtonDefaults.buttonColors(containerColor = CyberGreen, contentColor = DarkBackground)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                shape = RoundedCornerShape(100.dp)
             ) {
-                Text("Grant Permission", fontWeight = FontWeight.Bold)
+                Text("Grant permission", fontWeight = FontWeight.Bold)
             }
         }
         return
@@ -351,7 +354,7 @@ private fun QrScanTab(
             .fillMaxWidth()
             .height(280.dp)
             .clip(RoundedCornerShape(16.dp))
-            .border(1.dp, SurfaceBorder, RoundedCornerShape(16.dp)),
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
         contentAlignment = Alignment.Center
     ) {
         AndroidView(
@@ -423,7 +426,7 @@ private fun QrScanTab(
         Box(
             modifier = Modifier
                 .size(200.dp)
-                .border(2.dp, CyberGreen, RoundedCornerShape(16.dp))
+                .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(16.dp))
         )
     }
 
@@ -431,8 +434,8 @@ private fun QrScanTab(
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = scanError ?: "",
-            color = ErrorRed,
-            fontSize = 12.sp,
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.error,
             textAlign = TextAlign.Center
         )
     }
@@ -463,35 +466,35 @@ private fun FileImportTab(
             .padding(vertical = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(72.dp)
-                .clip(CircleShape)
-                .background(SurfaceCard)
-                .border(1.dp, SurfaceBorder, CircleShape),
-            contentAlignment = Alignment.Center
+        Surface(
+            modifier = Modifier.size(72.dp),
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
         ) {
-            Icon(
-                imageVector = Icons.Default.Description,
-                contentDescription = null,
-                tint = CyberGreen,
-                modifier = Modifier.size(36.dp)
-            )
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = Icons.Default.Description,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(36.dp)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Select Configuration File",
-            color = TextPrimary,
-            fontSize = 16.sp,
+            text = "Select configuration file",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
             text = "Supports .vpn, .conf, and .json config files",
-            color = TextSecondary,
-            fontSize = 13.sp
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -502,17 +505,17 @@ private fun FileImportTab(
                 .fillMaxWidth()
                 .height(52.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = CyberGreen,
-                contentColor = DarkBackground
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
-            shape = RoundedCornerShape(14.dp)
+            shape = RoundedCornerShape(100.dp)
         ) {
             Icon(imageVector = Icons.Default.FileUpload, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Choose File",
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                text = "Choose file",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
             )
         }
 
@@ -520,10 +523,11 @@ private fun FileImportTab(
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = errorText ?: "",
-                color = ErrorRed,
-                fontSize = 13.sp,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center
             )
         }
     }
 }
+

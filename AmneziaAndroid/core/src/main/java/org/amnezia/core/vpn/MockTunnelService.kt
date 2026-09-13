@@ -14,6 +14,7 @@ import org.amnezia.core.models.ConnectionStats
 import org.amnezia.core.models.ServerProfile
 import kotlin.random.Random
 
+/** Debug-only simulation of a tunnel. Never wired into release builds. */
 class MockTunnelService(
     private val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) : VpnTunnelService {
@@ -24,10 +25,12 @@ class MockTunnelService(
     private val _stats = MutableStateFlow(ConnectionStats())
     override val stats: StateFlow<ConnectionStats> = _stats.asStateFlow()
 
+    override val providesTrafficStats: Boolean = true
+
     private var simulationJob: Job? = null
     private var startTime: Long = 0L
 
-    override suspend fun startTunnel(profile: ServerProfile) {
+    override suspend fun startTunnel(profile: ServerProfile, options: TunnelOptions) {
         simulationJob?.cancel()
 
         _state.value = ConnectionState.Connecting

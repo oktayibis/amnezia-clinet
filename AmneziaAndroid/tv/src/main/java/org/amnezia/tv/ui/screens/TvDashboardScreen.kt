@@ -49,6 +49,7 @@ import org.amnezia.core.models.ConnectionState
 import org.amnezia.core.models.ConnectionStats
 import org.amnezia.core.models.ProtocolType
 import org.amnezia.core.models.ServerProfile
+import org.amnezia.tv.BuildConfig
 import org.amnezia.tv.ui.components.TvConnectButton
 import org.amnezia.tv.ui.components.TvFocusableCard
 import org.amnezia.tv.ui.theme.AwgPurple
@@ -72,6 +73,7 @@ fun TvDashboardScreen(
     val selectedProfile by appState.selectedProfile.collectAsStateWithLifecycle()
     val stats by appState.stats.collectAsStateWithLifecycle()
     val isSimulated by appState.isSimulatedTunnel.collectAsStateWithLifecycle()
+    val providesTrafficStats by appState.providesTrafficStats.collectAsStateWithLifecycle()
 
     Row(
         modifier = modifier
@@ -100,7 +102,7 @@ fun TvDashboardScreen(
 
             Spacer(modifier = Modifier.height(18.dp))
 
-            if (isSimulated) {
+            if (BuildConfig.DEBUG && isSimulated) {
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(6.dp))
@@ -208,17 +210,19 @@ fun TvDashboardScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Live Network Metrics
-            Text(
-                text = "NETWORK METRICS",
-                color = TextSecondary,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.Bold,
-                letterSpacing = 1.2.sp,
-                modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
-            )
+            // Live network metrics are shown only when the backend reports real byte counters.
+            if (providesTrafficStats) {
+                Text(
+                    text = "NETWORK METRICS",
+                    color = TextSecondary,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.2.sp,
+                    modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+                )
 
-            TvMetricsCard(stats = stats)
+                TvMetricsCard(stats = stats)
+            }
         }
     }
 }
@@ -237,7 +241,7 @@ private fun TvStatusPill(state: ConnectionState) {
     )
 
     val (statusColor, statusText, isPulsing) = when (state) {
-        is ConnectionState.Connected -> Triple(CyberGreen, "PROTECTED", false)
+        is ConnectionState.Connected -> Triple(CyberGreen, "CONNECTED", false)
         is ConnectionState.Connecting -> Triple(ConnectingOrange, "CONNECTING...", true)
         is ConnectionState.Reconnecting -> Triple(ConnectingOrange, "RECONNECTING...", true)
         is ConnectionState.Disconnecting -> Triple(ConnectingOrange, "DISCONNECTING...", true)

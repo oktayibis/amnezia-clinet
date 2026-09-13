@@ -1,7 +1,9 @@
 package org.amnezia.mobile.ui.screens
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,15 +23,20 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Dns
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -40,136 +47,170 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.amnezia.core.models.DnsProvider
+import org.amnezia.mobile.BuildConfig
 import org.amnezia.mobile.ui.components.GlassCard
-import org.amnezia.mobile.ui.theme.CyberGreen
-import org.amnezia.mobile.ui.theme.DarkBackground
-import org.amnezia.mobile.ui.theme.NeonCyan
-import org.amnezia.mobile.ui.theme.SurfaceBorder
-import org.amnezia.mobile.ui.theme.SurfaceCard
-import org.amnezia.mobile.ui.theme.SurfaceDark
-import org.amnezia.mobile.ui.theme.TextPrimary
-import org.amnezia.mobile.ui.theme.TextSecondary
 import org.amnezia.mobile.viewmodel.MobileAppState
+
+private const val REPOSITORY_URL = "https://github.com/oktayibis/amnezia-clinet"
 
 @Composable
 fun SettingsScreen(
     appState: MobileAppState,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val settings = appState.settings
     val isSimulated by appState.isSimulatedTunnel.collectAsStateWithLifecycle()
-    var selectedDns by remember { mutableStateOf(DnsProvider.CLOUDFLARE) }
+
+    var selectedDns by remember { mutableStateOf(settings.dnsProvider) }
+    var customDns by remember { mutableStateOf(settings.customDns) }
+    var connectOnLaunch by remember { mutableStateOf(settings.connectOnLaunch) }
     var showDnsDialog by remember { mutableStateOf(false) }
-    var killSwitchEnabled by remember { mutableStateOf(true) }
 
     val scrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(DarkBackground)
+            .background(MaterialTheme.colorScheme.background)
             .verticalScroll(scrollState)
-            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .padding(horizontal = 20.dp, vertical = 12.dp)
     ) {
-        // Header
         Text(
             text = "Settings",
-            color = TextPrimary,
-            fontSize = 22.sp,
+            style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Section: Tunnel & Security
-        SectionTitle(title = "TUNNEL & SECURITY")
+        SectionTitle(title = "Tunnel & security")
 
         GlassCard {
             Column(modifier = Modifier.fillMaxWidth()) {
-                // Simulation Toggle
                 SettingSwitchRow(
-                    icon = Icons.Default.Speed,
-                    title = "Simulated Tunnel Mode",
-                    subtitle = "Allows testing connection metrics and UI without root/system VPN permissions",
-                    isChecked = isSimulated,
-                    onCheckedChange = { appState.setSimulatedTunnel(it) }
+                    icon = Icons.Default.PlayArrow,
+                    title = "Connect on launch",
+                    subtitle = "Automatically connect to active server when app opens",
+                    isChecked = connectOnLaunch,
+                    onCheckedChange = {
+                        connectOnLaunch = it
+                        settings.connectOnLaunch = it
+                    }
                 )
 
                 SettingDivider()
 
-                // Kill switch
-                SettingSwitchRow(
-                    icon = Icons.Default.Security,
-                    title = "Kill Switch",
-                    subtitle = "Block internet traffic if VPN disconnects unexpectedly",
-                    isChecked = killSwitchEnabled,
-                    onCheckedChange = { killSwitchEnabled = it }
+                SettingLinkRow(
+                    icon = Icons.Default.Shield,
+                    iconContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    title = "Always-on VPN & Kill switch",
+                    subtitle = "Configure system-level kill switch in Android VPN settings",
+                    onClick = {
+                        runCatching { context.startActivity(Intent(Settings.ACTION_VPN_SETTINGS)) }
+                    }
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Section: Network & DNS
-        SectionTitle(title = "NETWORK & DNS")
+        SectionTitle(title = "Network & DNS")
 
-        GlassCard(onClick = { showDnsDialog = true }) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(38.dp)
-                        .clip(CircleShape)
-                        .background(NeonCyan.copy(alpha = 0.15f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Dns,
-                        contentDescription = null,
-                        tint = NeonCyan,
-                        modifier = Modifier.size(20.dp)
+        GlassCard {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                SettingLinkRow(
+                    icon = Icons.Default.Dns,
+                    iconContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
+                    title = "DNS provider",
+                    subtitle = selectedDns.title,
+                    onClick = { showDnsDialog = true }
+                )
+
+                if (selectedDns == DnsProvider.CUSTOM) {
+                    SettingDivider()
+                    OutlinedTextField(
+                        value = customDns,
+                        onValueChange = {
+                            customDns = it
+                            settings.customDns = it
+                        },
+                        label = { Text("Custom DNS servers") },
+                        placeholder = {
+                            Text(
+                                "e.g. 9.9.9.9, 149.112.112.112",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        },
+                        singleLine = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary,
+                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        shape = RoundedCornerShape(12.dp)
                     )
                 }
+            }
+        }
 
-                Spacer(modifier = Modifier.width(14.dp))
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "DNS Provider",
-                        color = TextPrimary,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = selectedDns.title,
-                        color = TextSecondary,
-                        fontSize = 13.sp
-                    )
-                }
-
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = TextSecondary,
-                    modifier = Modifier.size(20.dp)
+        if (BuildConfig.DEBUG) {
+            Spacer(modifier = Modifier.height(20.dp))
+            SectionTitle(title = "Developer (Debug build only)")
+            GlassCard {
+                SettingSwitchRow(
+                    icon = Icons.Default.Speed,
+                    title = "Simulated tunnel mode",
+                    subtitle = "Simulate connection state transitions and fake traffic",
+                    isChecked = isSimulated,
+                    onCheckedChange = { appState.setSimulatedTunnel(it) }
                 )
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        // Section: Protocols & About
-        SectionTitle(title = "ABOUT")
+        // Section: Privacy
+        SectionTitle(title = "Privacy")
+
+        GlassCard {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                SettingLinkRow(
+                    icon = Icons.Default.Security,
+                    iconContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                    iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    title = "Privacy policy",
+                    subtitle = "No data collection. Configs never leave this device.",
+                    onClick = {
+                        runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))) }
+                    }
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Section: About
+        SectionTitle(title = "About")
 
         GlassCard {
             Column(
@@ -177,56 +218,78 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Client Version", color = TextSecondary, fontSize = 14.sp)
-                    Text(text = "1.0.0 (Build 1)", color = TextPrimary, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                }
-
+                AboutRow(
+                    label = "Client version",
+                    value = "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+                )
                 SettingDivider(modifier = Modifier.padding(vertical = 12.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(text = "Supported Protocols", color = TextSecondary, fontSize = 14.sp)
-                    Text(text = "AmneziaWG, WireGuard", color = CyberGreen, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
-                }
-
+                AboutRow(
+                    label = "Supported protocols",
+                    value = "AmneziaWG, WireGuard",
+                    valueColor = MaterialTheme.colorScheme.primary
+                )
                 SettingDivider(modifier = Modifier.padding(vertical = 12.dp))
-
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable {
+                            runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(REPOSITORY_URL))) }
+                        }
+                        .padding(vertical = 2.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Obfuscation Header", color = TextSecondary, fontSize = 14.sp)
-                    Text(text = "Jc, Jmin, Jmax, S1, S2, H1-4", color = TextPrimary, fontSize = 13.sp)
+                    Text(
+                        text = "Open source (MIT)",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Code,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "GitHub",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 
-    // DNS Selection Dialog
     if (showDnsDialog) {
         AlertDialog(
             onDismissRequest = { showDnsDialog = false },
-            containerColor = SurfaceDark,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
             title = {
-                Text(text = "Select DNS Provider", color = TextPrimary, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Select DNS provider",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
             },
             text = {
                 Column {
                     DnsProvider.entries.forEach { provider ->
+                        val isSelected = selectedDns == provider
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(8.dp))
                                 .clickable {
                                     selectedDns = provider
+                                    settings.dnsProvider = provider
                                     showDnsDialog = false
                                 }
                                 .padding(vertical = 10.dp, horizontal = 8.dp),
@@ -235,21 +298,21 @@ fun SettingsScreen(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = provider.title,
-                                    color = if (selectedDns == provider) CyberGreen else TextPrimary,
-                                    fontWeight = if (selectedDns == provider) FontWeight.Bold else FontWeight.Normal,
-                                    fontSize = 15.sp
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
                                 Text(
                                     text = provider.subtitle,
-                                    color = TextSecondary,
-                                    fontSize = 12.sp
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            if (selectedDns == provider) {
+                            if (isSelected) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = null,
-                                    tint = CyberGreen,
+                                    tint = MaterialTheme.colorScheme.primary,
                                     modifier = Modifier.size(20.dp)
                                 )
                             }
@@ -259,9 +322,29 @@ fun SettingsScreen(
             },
             confirmButton = {
                 TextButton(onClick = { showDnsDialog = false }) {
-                    Text("Close", color = TextSecondary)
+                    Text("Close", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
+        )
+    }
+}
+
+@Composable
+private fun AboutRow(label: String, value: String, valueColor: Color = Color.Unspecified) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            color = if (valueColor != Color.Unspecified) valueColor else MaterialTheme.colorScheme.onSurface,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }
@@ -270,12 +353,33 @@ fun SettingsScreen(
 private fun SectionTitle(title: String) {
     Text(
         text = title,
-        color = TextSecondary,
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 1.2.sp,
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.SemiBold,
         modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
     )
+}
+
+@Composable
+private fun SettingIcon(
+    icon: ImageVector,
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    iconTint: Color = MaterialTheme.colorScheme.onSecondaryContainer
+) {
+    Surface(
+        modifier = Modifier.size(38.dp),
+        shape = CircleShape,
+        color = containerColor
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = iconTint,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
 }
 
 @Composable
@@ -292,58 +396,80 @@ private fun SettingSwitchRow(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(38.dp)
-                .clip(CircleShape)
-                .background(CyberGreen.copy(alpha = 0.15f)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = CyberGreen,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-
+        SettingIcon(
+            icon = icon,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            iconTint = MaterialTheme.colorScheme.onSecondaryContainer
+        )
         Spacer(modifier = Modifier.width(14.dp))
-
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = title,
-                color = TextPrimary,
-                fontSize = 15.sp,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.SemiBold
             )
+            Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = subtitle,
-                color = TextSecondary,
-                fontSize = 12.sp
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-
         Spacer(modifier = Modifier.width(10.dp))
-
         Switch(
             checked = isChecked,
-            onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = DarkBackground,
-                checkedTrackColor = CyberGreen,
-                uncheckedThumbColor = TextSecondary,
-                uncheckedTrackColor = SurfaceDark
+            onCheckedChange = onCheckedChange
+        )
+    }
+}
+
+@Composable
+private fun SettingLinkRow(
+    icon: ImageVector,
+    iconContainerColor: Color,
+    iconTint: Color,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        SettingIcon(icon = icon, containerColor = iconContainerColor, iconTint = iconTint)
+        Spacer(modifier = Modifier.width(14.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                fontWeight = FontWeight.SemiBold
             )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = subtitle,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(20.dp)
         )
     }
 }
 
 @Composable
 private fun SettingDivider(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(SurfaceBorder)
+    HorizontalDivider(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.outlineVariant
     )
 }
+

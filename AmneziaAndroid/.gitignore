@@ -9,3 +9,7 @@ captures
 .externalNativeBuild
 .cxx
 *.apk
+keystore.properties
+*.jks
+*.keystore
+*.aab

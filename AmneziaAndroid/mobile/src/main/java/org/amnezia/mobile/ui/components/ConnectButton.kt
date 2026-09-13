@@ -2,8 +2,8 @@ package org.amnezia.mobile.ui.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.infiniteRepeatable
@@ -14,12 +14,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -27,16 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.amnezia.core.models.ConnectionState
-import org.amnezia.mobile.ui.theme.ConnectingOrange
-import org.amnezia.mobile.ui.theme.CyberGreen
-import org.amnezia.mobile.ui.theme.DarkBackground
-import org.amnezia.mobile.ui.theme.SurfaceCard
-import org.amnezia.mobile.ui.theme.TextPrimary
-import org.amnezia.mobile.ui.theme.TextSecondary
 
 @Composable
 fun ConnectButton(
@@ -47,6 +43,20 @@ fun ConnectButton(
     val isConnected = connectionState.isConnected
     val isBusy = connectionState.isBusy
 
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    // Tactile press scale
+    val pressScale by animateFloatAsState(
+        targetValue = if (isPressed) 0.94f else 1.0f,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "pressScale"
+    )
+
+    // Infinite breathing/pulsing animation
     val infiniteTransition = rememberInfiniteTransition(label = "halo")
     val haloPulse by infiniteTransition.animateFloat(
         initialValue = 1.0f,
@@ -59,7 +69,7 @@ fun ConnectButton(
     )
     val haloAlpha by infiniteTransition.animateFloat(
         initialValue = 0.2f,
-        targetValue = 0.5f,
+        targetValue = 0.45f,
         animationSpec = infiniteRepeatable(
             animation = tween(1500, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
@@ -67,100 +77,87 @@ fun ConnectButton(
         label = "haloAlpha"
     )
 
-    val buttonColor by animateColorAsState(
+    // M3 Color roles
+    val containerColor by animateColorAsState(
         targetValue = when {
-            isConnected -> CyberGreen
-            isBusy -> ConnectingOrange
-            else -> SurfaceCard
+            isConnected -> MaterialTheme.colorScheme.primary
+            isBusy -> MaterialTheme.colorScheme.tertiaryContainer
+            else -> MaterialTheme.colorScheme.surfaceContainerHigh
         },
-        animationSpec = tween(500),
+        animationSpec = tween(350),
         label = "btnColor"
     )
 
     val iconColor by animateColorAsState(
         targetValue = when {
-            isConnected -> DarkBackground
-            isBusy -> DarkBackground
-            else -> CyberGreen
+            isConnected -> MaterialTheme.colorScheme.onPrimary
+            isBusy -> MaterialTheme.colorScheme.onTertiaryContainer
+            else -> MaterialTheme.colorScheme.primary
         },
         animationSpec = tween(300),
         label = "iconColor"
     )
 
     Box(
-        modifier = modifier.size(190.dp),
+        modifier = modifier
+            .size(200.dp)
+            .scale(pressScale),
         contentAlignment = Alignment.Center
     ) {
-        // Outer glowing halo (visible when connected or busy)
+        // Layer 1: Ambient M3 aura when connecting or connected
         if (isConnected || isBusy) {
+            val auraColor = if (isConnected) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.tertiaryContainer
+            }
             Box(
                 modifier = Modifier
-                    .size(175.dp)
+                    .size(195.dp)
                     .scale(haloPulse)
                     .clip(CircleShape)
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(
-                                buttonColor.copy(alpha = haloAlpha),
-                                Color.Transparent
-                            )
-                        )
-                    )
+                    .background(auraColor.copy(alpha = haloAlpha))
             )
         }
 
-        // Secondary border ring
+        // Layer 2: Outer M3 track ring
         Box(
             modifier = Modifier
-                .size(164.dp)
+                .size(180.dp)
                 .clip(CircleShape)
                 .border(
                     width = 2.dp,
-                    color = if (isConnected || isBusy) buttonColor.copy(alpha = 0.6f) else Color(0x22FFFFFF),
+                    color = if (isConnected || isBusy) {
+                        containerColor.copy(alpha = 0.4f)
+                    } else {
+                        MaterialTheme.colorScheme.surfaceContainerHighest
+                    },
                     shape = CircleShape
                 )
         )
 
-        // Main inner circular button
-        Box(
-            modifier = Modifier
-                .size(142.dp)
-                .clip(CircleShape)
-                .background(
-                    if (isConnected || isBusy) {
-                        Brush.verticalGradient(
-                            listOf(
-                                buttonColor,
-                                buttonColor.copy(alpha = 0.85f)
-                            )
-                        )
-                    } else {
-                        Brush.verticalGradient(
-                            listOf(
-                                Color(0xFF1E2638),
-                                Color(0xFF141A26)
-                            )
-                        )
-                    }
-                )
-                .border(
-                    width = 1.5.dp,
-                    color = if (isConnected || isBusy) Color.White.copy(alpha = 0.3f) else Color(0x33FFFFFF),
-                    shape = CircleShape
-                )
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = onClick
-                ),
-            contentAlignment = Alignment.Center
+        // Layer 3: Main M3 Surface button
+        Surface(
+            onClick = onClick,
+            modifier = Modifier.size(148.dp),
+            shape = CircleShape,
+            color = containerColor,
+            tonalElevation = if (isConnected) 8.dp else 4.dp,
+            shadowElevation = if (isConnected) 12.dp else 4.dp,
+            interactionSource = interactionSource
         ) {
-            Icon(
-                imageVector = Icons.Default.PowerSettingsNew,
-                contentDescription = if (isConnected) "Disconnect" else "Connect",
-                tint = iconColor,
-                modifier = Modifier.size(54.dp)
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.size(148.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PowerSettingsNew,
+                    contentDescription = if (isConnected) "Disconnect" else "Connect",
+                    tint = iconColor,
+                    modifier = Modifier.size(54.dp)
+                )
+            }
         }
     }
 }
+

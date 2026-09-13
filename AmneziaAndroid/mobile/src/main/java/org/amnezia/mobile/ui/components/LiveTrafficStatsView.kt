@@ -8,25 +8,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.NetworkCheck
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.amnezia.core.models.ConnectionStats
-import org.amnezia.mobile.ui.theme.CyberGreen
-import org.amnezia.mobile.ui.theme.NeonCyan
-import org.amnezia.mobile.ui.theme.TextPrimary
-import org.amnezia.mobile.ui.theme.TextSecondary
 
 @Composable
 fun LiveTrafficStatsView(
@@ -37,40 +35,42 @@ fun LiveTrafficStatsView(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 12.dp),
+                .padding(vertical = 14.dp, horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Ping / Latency
-            StatTile(
-                icon = Icons.Default.NetworkCheck,
-                label = "PING",
-                value = stats.latencyMs?.let { "${it}ms" } ?: "--",
-                accentColor = CyberGreen
-            )
+            // Latency is only shown when the backend measured it.
+            stats.latencyMs?.let { latency ->
+                StatTile(
+                    icon = Icons.Default.NetworkCheck,
+                    label = "Ping",
+                    value = "${latency}ms",
+                    accentColor = MaterialTheme.colorScheme.primary
+                )
+            }
 
             // Download
             StatTile(
                 icon = Icons.Default.ArrowDownward,
-                label = "DOWN",
+                label = "Down",
                 value = stats.formattedDownloadSpeed,
-                accentColor = CyberGreen
+                accentColor = MaterialTheme.colorScheme.primary
             )
 
             // Upload
             StatTile(
                 icon = Icons.Default.ArrowUpward,
-                label = "UP",
+                label = "Up",
                 value = stats.formattedUploadSpeed,
-                accentColor = NeonCyan
+                accentColor = MaterialTheme.colorScheme.tertiary
             )
 
             // Duration
             StatTile(
                 icon = Icons.Default.Timer,
-                label = "TIME",
+                label = "Time",
                 value = stats.formattedDuration,
-                accentColor = TextSecondary
+                accentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -81,7 +81,7 @@ private fun StatTile(
     icon: ImageVector,
     label: String,
     value: String,
-    accentColor: androidx.compose.ui.graphics.Color
+    accentColor: Color
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -93,21 +93,23 @@ private fun StatTile(
                 imageVector = icon,
                 contentDescription = null,
                 tint = accentColor,
-                modifier = Modifier.size(13.dp)
+                modifier = Modifier.size(14.dp)
             )
+            Spacer(modifier = Modifier.width(3.dp))
             Text(
-                text = " $label",
-                color = TextSecondary,
-                fontSize = 11.sp,
-                fontWeight = FontWeight.SemiBold
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = FontWeight.Medium
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(3.dp))
         Text(
             text = value,
-            color = TextPrimary,
-            fontSize = 14.sp,
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurface,
             fontWeight = FontWeight.Bold
         )
     }
 }
+

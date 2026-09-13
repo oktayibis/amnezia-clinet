@@ -1,8 +1,11 @@
 package org.amnezia.tv
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,6 +30,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +45,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.amnezia.tv.ui.screens.TvDashboardScreen
+import org.amnezia.tv.ui.screens.TvPrivacyNoticeScreen
 import org.amnezia.tv.ui.screens.TvServersScreen
 import org.amnezia.tv.ui.screens.TvSettingsScreen
 import org.amnezia.tv.ui.theme.AmneziaTvTheme
@@ -64,7 +70,17 @@ class TvMainActivity : ComponentActivity() {
 
         setContent {
             AmneziaTvTheme {
-                TvAppScaffold(appState = appState)
+                var privacyAccepted by remember { mutableStateOf(appState.settings.privacyNoticeAccepted) }
+
+                if (!privacyAccepted) {
+                    // Google Play VpnService policy: disclose data handling before any VPN use.
+                    TvPrivacyNoticeScreen(onAccept = {
+                        appState.settings.privacyNoticeAccepted = true
+                        privacyAccepted = true
+                    })
+                } else {
+                    TvAppScaffold(appState = appState)
+                }
             }
         }
     }
@@ -79,6 +95,20 @@ private enum class TvTab(val title: String, val icon: ImageVector) {
 @Composable
 private fun TvAppScaffold(appState: TvAppState) {
     var selectedTab by remember { mutableIntStateOf(0) }
+    val pendingVpnPermission by appState.pendingVpnPermission.collectAsStateWithLifecycle()
+
+    // System VPN consent dialog (VpnService.prepare) — launched when the state layer asks for it.
+    val vpnPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        appState.onVpnPermissionResult(result.resultCode == Activity.RESULT_OK)
+    }
+    LaunchedEffect(pendingVpnPermission) {
+        pendingVpnPermission?.let { vpnPermissionLauncher.launch(it) }
+    }
+    LaunchedEffect(Unit) {
+        appState.connectOnLaunchIfNeeded()
+    }
 
     Column(
         modifier = Modifier
@@ -98,7 +128,7 @@ private fun TvAppScaffold(appState: TvAppState) {
             // Brand Title
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "AMNEZIA",
+                    text = "AWG CONNECT",
                     color = CyberGreen,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Black,

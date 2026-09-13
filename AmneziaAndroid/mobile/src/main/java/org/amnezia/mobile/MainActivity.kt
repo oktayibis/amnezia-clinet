@@ -1,50 +1,39 @@
 package org.amnezia.mobile
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Dns
-import androidx.compose.material.icons.filled.PowerSettingsNew
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import org.amnezia.mobile.ui.components.AppNavigationBar
 import org.amnezia.mobile.ui.screens.AddServerBottomSheet
 import org.amnezia.mobile.ui.screens.DashboardScreen
+import org.amnezia.mobile.ui.screens.PrivacyNoticeScreen
 import org.amnezia.mobile.ui.screens.ServersScreen
 import org.amnezia.mobile.ui.screens.SettingsScreen
 import org.amnezia.mobile.ui.theme.AmneziaTheme
-import org.amnezia.mobile.ui.theme.CyberGreen
-import org.amnezia.mobile.ui.theme.DarkBackground
-import org.amnezia.mobile.ui.theme.SurfaceBorder
-import org.amnezia.mobile.ui.theme.SurfaceDark
-import org.amnezia.mobile.ui.theme.TextPrimary
-import org.amnezia.mobile.ui.theme.TextSecondary
 import org.amnezia.mobile.viewmodel.MobileAppState
 
 class MainActivity : ComponentActivity() {
@@ -60,7 +49,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AmneziaTheme {
-                MainAppScaffold(appState = appState)
+                var privacyAccepted by remember { mutableStateOf(appState.settings.privacyNoticeAccepted) }
+
+                if (!privacyAccepted) {
+                    // Google Play VpnService policy: disclose data handling before any VPN use.
+                    PrivacyNoticeScreen(onAccept = {
+                        appState.settings.privacyNoticeAccepted = true
+                        privacyAccepted = true
+                    })
+                } else {
+                    MainAppScaffold(appState = appState)
+                }
             }
         }
     }
@@ -70,77 +69,59 @@ class MainActivity : ComponentActivity() {
         handleIntent(intent)
     }
 
-    override fun onResume() {
-        super.onResume()
-        appState.checkClipboard()
-    }
-
     private fun handleIntent(intent: Intent?) {
         val uri = intent?.data ?: return
         val urlString = uri.toString()
-        if (urlString.startsWith("vpn://") || urlString.startsWith("amnezia://")) {
-            try {
-                appState.importFromText(urlString)
-            } catch (_: Exception) { }
+        val payload = when {
+            urlString.startsWith("vpn://") -> urlString
+            urlString.startsWith("awgconnect://") -> urlString.removePrefix("awgconnect://")
+            else -> return
+        }
+        try {
+            appState.importFromText(payload)
+        } catch (_: Exception) {
         }
     }
-}
-
-private enum class NavTab(val title: String, val icon: ImageVector) {
-    CONNECT("Connect", Icons.Default.PowerSettingsNew),
-    SERVERS("Servers", Icons.Default.Dns),
-    SETTINGS("Settings", Icons.Default.Settings)
 }
 
 @Composable
 private fun MainAppScaffold(appState: MobileAppState) {
     var selectedTab by remember { mutableIntStateOf(0) }
     val isAddServerPresented by appState.isAddServerPresented.collectAsStateWithLifecycle()
+    val pendingVpnPermission by appState.pendingVpnPermission.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    // System VPN consent dialog (VpnService.prepare) — launched when the state layer asks for it.
+    val vpnPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        appState.onVpnPermissionResult(result.resultCode == Activity.RESULT_OK)
+    }
+    LaunchedEffect(pendingVpnPermission) {
+        pendingVpnPermission?.let { vpnPermissionLauncher.launch(it) }
+    }
+
+    // Android 13+: the foreground-service notification needs runtime permission.
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { }
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        appState.connectOnLaunchIfNeeded()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = DarkBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .background(SurfaceDark)
-                    .border(width = 1.dp, color = SurfaceBorder)
-            ) {
-                NavigationBar(
-                    containerColor = SurfaceDark,
-                    tonalElevation = 0.dp,
-                    modifier = Modifier.height(72.dp)
-                ) {
-                    NavTab.entries.forEachIndexed { index, tab ->
-                        val isSelected = selectedTab == index
-                        NavigationBarItem(
-                            selected = isSelected,
-                            onClick = { selectedTab = index },
-                            icon = {
-                                Icon(
-                                    imageVector = tab.icon,
-                                    contentDescription = tab.title,
-                                    modifier = Modifier.size(22.dp)
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = tab.title,
-                                    fontSize = 12.sp,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                                )
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = CyberGreen,
-                                selectedTextColor = CyberGreen,
-                                unselectedIconColor = TextSecondary,
-                                unselectedTextColor = TextSecondary,
-                                indicatorColor = Color.Transparent
-                            )
-                        )
-                    }
-                }
-            }
+            AppNavigationBar(
+                selectedTab = selectedTab,
+                onTabSelected = { selectedTab = it }
+            )
         }
     ) { innerPadding ->
         Box(

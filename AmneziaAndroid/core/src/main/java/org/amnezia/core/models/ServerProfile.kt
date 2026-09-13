@@ -6,7 +6,7 @@ import java.util.UUID
 @Serializable
 data class ServerProfile(
     val id: String = UUID.randomUUID().toString(),
-    var name: String = "Amnezia Server",
+    var name: String = "VPN Server",
     var protocolType: ProtocolType = ProtocolType.AMNEZIA_WG,
     var host: String = "",
     var port: Int = 51820,

@@ -5,44 +5,53 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Surface
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.amnezia.mobile.ui.theme.SurfaceBorder
-import org.amnezia.mobile.ui.theme.SurfaceCard
 
+/**
+ * Material 3 Card adhering to m3.material.io specifications:
+ * 16dp corner radius, surfaceContainerLow background, outlineVariant border.
+ */
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(20.dp),
-    backgroundColor: Color = SurfaceCard,
-    borderColor: Color = SurfaceBorder,
+    shape: Shape = RoundedCornerShape(16.dp),
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceContainerLow,
+    borderColor: Color = MaterialTheme.colorScheme.outlineVariant,
     borderWidth: Dp = 1.dp,
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
     if (onClick != null) {
-        Surface(
+        OutlinedCard(
             onClick = onClick,
             modifier = modifier.fillMaxWidth(),
             shape = shape,
-            color = backgroundColor,
+            colors = CardDefaults.outlinedCardColors(
+                containerColor = backgroundColor
+            ),
             border = BorderStroke(borderWidth, borderColor)
         ) {
             Box { content() }
         }
     } else {
-        Surface(
+        OutlinedCard(
             modifier = modifier.fillMaxWidth(),
             shape = shape,
-            color = backgroundColor,
+            colors = CardDefaults.outlinedCardColors(
+                containerColor = backgroundColor
+            ),
             border = BorderStroke(borderWidth, borderColor)
         ) {
             Box { content() }
         }
     }
 }
+

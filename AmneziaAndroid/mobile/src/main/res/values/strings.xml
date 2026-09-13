@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Amnezia</string>
+    <string name="app_name">AWG Connect</string>
+    <string name="vpn_notification_channel">VPN connection</string>
+    <string name="vpn_notification_title">AWG Connect is active</string>
 </resources>
